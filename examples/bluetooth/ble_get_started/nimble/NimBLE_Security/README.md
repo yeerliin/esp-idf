@@ -1,79 +1,79 @@
 | Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-H2 | ESP32-S3 |
 | ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- |
 
-# NimBLE Security Example
+# Ejemplo de Seguridad NimBLE
 
-## Overview
+## Descripción General
 
-This example is extended from NimBLE GATT Server Example, and further introduces
+Este ejemplo se extiende del Ejemplo del Servidor GATT de NimBLE, y además introduce:
 
-1. How to set random non-resolvable private address for device
-2. How to ask for connection encryption from peripheral side on characteristic access
-3. How to bond with peer device using a random generated 6-digit passkey
+1. Cómo establecer una dirección privada aleatoria no resoluble para el dispositivo
+2. Cómo solicitar el cifrado de la conexión desde el lado periférico en el acceso a las características
+3. Cómo emparejar con un dispositivo par utilizando una clave de acceso de 6 dígitos generada aleatoriamente
 
 
-To test this demo, install *nRF Connect for Mobile* on your phone. 
+Para probar esta demostración, instala *nRF Connect for Mobile* en tu teléfono. 
 
-## Try It Yourself
+## Pruébalo Tú Mismo
 
-### Set Target
+### Establecer el Objetivo
 
-Before project configuration and build, be sure to set the correct chip target using:
+Antes de la configuración y compilación del proyecto, asegúrate de establecer el objetivo de chip correcto utilizando:
 
 ``` shell
 idf.py set-target <chip_name>
 ```
 
-For example, if you're using ESP32, then input
+Por ejemplo, si estás usando ESP32, entonces ingresa:
 
 ``` Shell
 idf.py set-target esp32
 ```
 
-### Build and Flash
+### Compilar y Flashear
 
-Run the following command to build, flash and monitor the project.
+Ejecuta el siguiente comando para compilar, flashear y monitorear el proyecto.
 
 ``` Shell
-idf.py -p <PORT> flash monitor
+idf.py -p <PUERTO> flash monitor
 ```
 
-For example, if the corresponding serial port is `/dev/ttyACM0`, then it goes
+Por ejemplo, si el puerto serial correspondiente es `/dev/ttyACM0`, entonces sería:
 
 ``` Shell
 idf.py -p /dev/ttyACM0 flash monitor
 ```
 
-(To exit the serial monitor, type ``Ctrl-]``.)
+(Para salir del monitor serial, escribe ``Ctrl-]``.)
 
-See the [Getting Started Guide](https://idf.espressif.com/) for full steps to configure and use ESP-IDF to build projects.
+Consulta la [Guía de Inicio](https://idf.espressif.com/) para conocer los pasos completos para configurar y utilizar ESP-IDF para compilar proyectos.
 
-## Code Explained
+## Código Explicado
 
-### Overview
+### Descripción General
 
-The following is additional content compared to the NimBLE GATT Server example.
+El siguiente es contenido adicional en comparación con el ejemplo del Servidor GATT de NimBLE.
 
-1. Initialization procedure is generally similar to NimBLE GATT Server Example, but we'll initialize random number generator in the beginning, and in `nimble_host_config_init` we will configure security manager to enable related features
-2. On stack sync, a random non-resolvable private address is generated and set as the device address
-3. Characteristics' permission modified to require connection encryption when accessing
-4. 3 more GAP event branches added in `gap_event_handler` to handle encryption related events
+1. El procedimiento de inicialización es generalmente similar al Ejemplo del Servidor GATT de NimBLE, pero inicializaremos el generador de números aleatorios al principio, y en `nimble_host_config_init` configuraremos el administrador de seguridad para habilitar características relacionadas
+2. En la sincronización de la pila, se genera una dirección privada aleatoria no resoluble y se establece como la dirección del dispositivo
+3. Los permisos de las características se modifican para requerir cifrado de conexión al acceder
+4. Se agregan 3 ramas de eventos GAP más en `gap_event_handler` para manejar eventos relacionados con el cifrado
 
-### Entry Point
+### Punto de Entrada
 
-In `nimble_host_config_init` function, we're going to enable some security manager features, including
+En la función `nimble_host_config_init`, vamos a habilitar algunas características del administrador de seguridad, incluyendo:
 
-- Bonding
-- Man-in-the-middle protection
-- Key distribution
+- Emparejamiento
+- Protección contra ataques de intermediario
+- Distribución de claves
 
-Also, we're going to set the IO capability to `BLE_HS_IO_DISPLAY_ONLY`, since it's possible to print out the passkey to serial output.
+Además, vamos a establecer la capacidad de E/S a `BLE_HS_IO_DISPLAY_ONLY`, ya que es posible imprimir la clave de acceso en la salida serial.
 
 ``` C
 static void nimble_host_config_init(void) {
     ...
 
-    /* Security manager configuration */
+    /* Configuración del administrador de seguridad */
     ble_hs_cfg.sm_io_cap = BLE_HS_IO_DISPLAY_ONLY;
     ble_hs_cfg.sm_bonding = 1;
     ble_hs_cfg.sm_mitm = 1;
@@ -84,20 +84,20 @@ static void nimble_host_config_init(void) {
 }
 ```
 
-### GATT Server Updates
+### Actualizaciones del Servidor GATT
 
-For heart rate characteristic and LED characteristic, `BLE_GATT_CHR_F_READ_ENC` and `BLE_GATT_CHR_F_WRITE_ENC` flag are added respectively to require connection encryption when GATT client tries to access the characteristic. Thanks to NimBLE host stack, the connection encryption will be initiated automatically by adding these flags.
+Para la característica de frecuencia cardíaca y la característica LED, se agregan las banderas `BLE_GATT_CHR_F_READ_ENC` y `BLE_GATT_CHR_F_WRITE_ENC` respectivamente para requerir cifrado de conexión cuando el cliente GATT intenta acceder a la característica. Gracias a la pila del host NimBLE, el cifrado de la conexión se iniciará automáticamente al agregar estas banderas.
 
-However, heart rate characteristic is also indicatable, and NimBLE host stack does not offer an implementation for indication access to require connection encryption, so we need to do it ourselves. For GATT server, we simply check connection security status by calling an external function `is_connection_encrypted` in `send_heart_rate_indication` function to determine if the indication should be sent. This external function is defined in GAP layer, and we'll talk about it in *GAP Event Handler Updates* section.
+Sin embargo, la característica de frecuencia cardíaca también es indicable, y la pila del host NimBLE no ofrece una implementación para que el acceso de indicación requiera cifrado de conexión, por lo que debemos hacerlo nosotros mismos. Para el servidor GATT, simplemente verificamos el estado de seguridad de la conexión llamando a una función externa `is_connection_encrypted` en la función `send_heart_rate_indication` para determinar si se debe enviar la indicación. Esta función externa se define en la capa GAP, y hablaremos de ella en la sección *Actualizaciones del Manejador de Eventos GAP*.
 
 ``` C
 void send_heart_rate_indication(void) {
-    /* Check if connection handle is initialized */
+    /* Comprobar si el identificador de conexión está inicializado */
     if (!heart_rate_chr_conn_handle_inited) {
         return;
     }
 
-    /* Check indication and security status */
+    /* Comprobar el estado de indicación y seguridad */
     if (heart_rate_ind_status &&
         is_connection_encrypted(heart_rate_chr_conn_handle)) {
         ble_gatts_indicate(heart_rate_chr_conn_handle,
@@ -106,37 +106,37 @@ void send_heart_rate_indication(void) {
 }
 ```
 
-### Random Address
+### Dirección Aleatoria
 
-In the following function, we can generate a random non-resolvable private address and set as the device address. We will call it in `adv_init` function before ensuring address availability.
+En la siguiente función, podemos generar una dirección privada aleatoria no resoluble y establecerla como la dirección del dispositivo. La llamaremos en la función `adv_init` antes de asegurar la disponibilidad de la dirección.
 
 ``` C
 static void set_random_addr(void) {
-    /* Local variables */
+    /* Variables locales */
     int rc = 0;
     ble_addr_t addr;
 
-    /* Generate new non-resolvable private address */
+    /* Generar nueva dirección privada no resoluble */
     rc = ble_hs_id_gen_rnd(0, &addr);
     assert(rc == 0);
 
-    /* Set address */
+    /* Establecer dirección */
     rc = ble_hs_id_set_rnd(addr.val);
     assert(rc == 0);
 }
 ```
 
-### Check Connection Encryption Status
+### Verificar el Estado de Cifrado de la Conexión
 
-By connection handle, we can fetch connection descriptor from NimBLE host stack, and there's a flag indicating connection encryption status, check the following codes
+Por el identificador de conexión, podemos obtener el descriptor de conexión de la pila host de NimBLE, y hay una bandera que indica el estado de cifrado de la conexión, ver los siguientes códigos:
 
 ``` C
 bool is_connection_encrypted(uint16_t conn_handle) {
-    /* Local variables */
+    /* Variables locales */
     int rc = 0;
     struct ble_gap_conn_desc desc;
 
-    /* Print connection descriptor */
+    /* Imprimir descriptor de conexión */
     rc = ble_gap_conn_find(conn_handle, &desc);
     if (rc != 0) {
         ESP_LOGE(TAG, "failed to find connection by handle, error code: %d",
@@ -148,20 +148,20 @@ bool is_connection_encrypted(uint16_t conn_handle) {
 }
 ```
 
-### GAP Event Handler Updates
+### Actualizaciones del Manejador de Eventos GAP
 
-3 more GAP event branches are added in `gap_event_handler`, which are
+Se agregaron 3 ramas más de eventos GAP en `gap_event_handler`, que son:
 
-- `BLE_GAP_EVENT_ENC_CHANGE` - Encryption change event
-- `BLE_GAP_EVENT_REPEAT_PAIRING` - Repeat pairing event
-- `BLE_GAP_EVENT_PASSKEY_ACTION` - Passkey action event
+- `BLE_GAP_EVENT_ENC_CHANGE` - Evento de cambio de cifrado
+- `BLE_GAP_EVENT_REPEAT_PAIRING` - Evento de emparejamiento repetido
+- `BLE_GAP_EVENT_PASSKEY_ACTION` - Evento de acción de clave de acceso
 
-On encryption change event, we're going to print the encryption change status to output.
+En el evento de cambio de cifrado, vamos a imprimir el estado del cambio de cifrado en la salida.
 
 ``` C
-/* Encryption change event */
+/* Evento de cambio de cifrado */
 case BLE_GAP_EVENT_ENC_CHANGE:
-    /* Encryption has been enabled or disabled for this connection. */
+    /* El cifrado ha sido habilitado o deshabilitado para esta conexión. */
     if (event->enc_change.status == 0) {
         ESP_LOGI(TAG, "connection encrypted!");
     } else {
@@ -171,12 +171,12 @@ case BLE_GAP_EVENT_ENC_CHANGE:
     return rc;
 ```
 
-On repeat pairing event, to make it simple, we will just delete the old bond and repeat pairing.
+En el evento de emparejamiento repetido, para simplificarlo, simplemente eliminaremos el vínculo antiguo y repetiremos el emparejamiento.
 
 ``` C
-/* Repeat pairing event */
+/* Evento de emparejamiento repetido */
 case BLE_GAP_EVENT_REPEAT_PAIRING:
-    /* Delete the old bond */
+    /* Eliminar el vínculo antiguo */
     rc = ble_gap_conn_find(event->repeat_pairing.conn_handle, &desc);
     if (rc != 0) {
         ESP_LOGE(TAG, "failed to find connection, error code %d", rc);
@@ -184,20 +184,20 @@ case BLE_GAP_EVENT_REPEAT_PAIRING:
     }
     ble_store_util_delete_peer(&desc.peer_id_addr);
 
-    /* Return BLE_GAP_REPEAT_PAIRING_RETRY to indicate that the host should
-        * continue with pairing operation */
+    /* Devolver BLE_GAP_REPEAT_PAIRING_RETRY para indicar que el host debe
+        * continuar con la operación de emparejamiento */
     ESP_LOGI(TAG, "repairing...");
     return BLE_GAP_REPEAT_PAIRING_RETRY;
 ```
 
-On passkey action event, a random 6-digit passkey is generated, and you are supposed to enter the same passkey on pairing. If the input is consistent with the generated passkey, you should be able to bond with the device.
+En el evento de acción de clave de acceso, se genera una clave de acceso aleatoria de 6 dígitos, y se supone que debes ingresar la misma clave de acceso al emparejar. Si la entrada es consistente con la clave de acceso generada, deberías poder vincularte con el dispositivo.
 
 ``` C
-/* Passkey action event */
+/* Evento de acción de clave de acceso */
 case BLE_GAP_EVENT_PASSKEY_ACTION:
-    /* Display action */
+    /* Acción de visualización */
     if (event->passkey.params.action == BLE_SM_IOACT_DISP) {
-        /* Generate passkey */
+        /* Generar clave de acceso */
         struct ble_sm_io pkey = {0};
         pkey.action = event->passkey.params.action;
         pkey.passkey = 100000 + esp_random() % 900000;
@@ -214,10 +214,10 @@ case BLE_GAP_EVENT_PASSKEY_ACTION:
     return rc;
 ```
 
-## Observation
+## Observación
 
-If everything goes well, pairing will be required when you try to access any of the characteristics, that is, read or indicate heart rate characteristic, or write LED characteristic.
+Si todo va bien, se requerirá emparejamiento cuando intentes acceder a cualquiera de las características, es decir, leer o indicar la característica de frecuencia cardíaca, o escribir la característica LED.
 
-## Troubleshooting
+## Solución de Problemas
 
-For any technical queries, please file an [issue](https://github.com/espressif/esp-idf/issues) on GitHub. We will get back to you soon.
+Para cualquier consulta técnica, por favor abre un [issue](https://github.com/espressif/esp-idf/issues) en GitHub. Te responderemos lo antes posible.

@@ -1,25 +1,25 @@
-# Protocols Examples
+# Ejemplos de Protocolos
 
-Implementation of internet communication protocols and services.
+Implementación de protocolos y servicios de comunicación por Internet.
 
-See the [README.md](../README.md) file in the upper level [examples](../) directory for more information about examples.
+Consulta el archivo [README.md](../README.md) en el directorio [examples](../) de nivel superior para obtener más información sobre los ejemplos.
 
-## Establishing Wi-Fi or Ethernet Connection
+## Establecimiento de Conexión Wi-Fi o Ethernet
 
-### About the `example_connect()` Function
+### Acerca de la Función `example_connect()`
 
-Protocols examples use a simple helper function, `example_connect()`, to establish Wi-Fi and/or Ethernet connection. This function is implemented in [examples/common_components/protocol_examples_common/include/protocol_examples_common.h](../common_components/protocol_examples_common/include/protocol_examples_common.h), and has a very simple behavior: block until connection is established and IP address is obtained, then return. This function is used to reduce the amount of boilerplate and to keep the example code focused on the protocol or library being demonstrated.
+Los ejemplos de protocolos utilizan una función auxiliar simple, `example_connect()`, para establecer la conexión Wi-Fi y/o Ethernet. Esta función se implementa en [examples/common_components/protocol_examples_common/include/protocol_examples_common.h](../common_components/protocol_examples_common/include/protocol_examples_common.h), y tiene un comportamiento muy simple: bloquea hasta que se establece la conexión y se obtiene la dirección IP, luego retorna. Esta función se utiliza para reducir la cantidad de código repetitivo y para mantener el código de ejemplo centrado en el protocolo o biblioteca que se está demostrando.
 
-The simple `example_connect()` function does not handle timeouts, does not gracefully handle various error conditions, and is only suited for use in examples. When developing real applications, this helper function needs to be replaced with full Wi-Fi / Ethernet connection handling code. Such code can be found in [examples/wifi/getting_started/](../wifi/getting_started) and [examples/ethernet/basic/](../ethernet/basic) examples.
+La función simple `example_connect()` no maneja tiempos de espera, no maneja con elegancia varias condiciones de error, y solo es adecuada para su uso en ejemplos. Al desarrollar aplicaciones reales, esta función auxiliar debe ser reemplazada por un código completo de manejo de conexiones Wi-Fi / Ethernet. Dicho código se puede encontrar en los ejemplos [examples/wifi/getting_started/](../wifi/getting_started) y [examples/ethernet/basic/](../ethernet/basic).
 
-### Configuring the Example
+### Configuración del Ejemplo
 
-To configure the example to use Wi-Fi, Ethernet or both connections, open the project configuration menu (`idf.py menuconfig`) and navigate to "Example Connection Configuration" menu. Select either "Wi-Fi" or "Ethernet" or both in the "Connect using" choice.
+Para configurar el ejemplo para usar Wi-Fi, Ethernet o ambas conexiones, abre el menú de configuración del proyecto (`idf.py menuconfig`) y navega al menú "Example Connection Configuration". Selecciona "Wi-Fi" o "Ethernet" o ambos en la opción "Connect using".
 
-When connecting using Wi-Fi, enter SSID and password of your Wi-Fi access point into the corresponding fields. If connecting to an open Wi-Fi network, keep the password field empty.
+Al conectar usando Wi-Fi, ingresa el SSID y la contraseña de tu punto de acceso Wi-Fi en los campos correspondientes. Si te conectas a una red Wi-Fi abierta, mantén el campo de contraseña vacío.
 
-When connecting using Ethernet, set up PHY type and configuration in the provided fields. If using Ethernet for the first time, it is recommended to start with the [Ethernet example readme](../ethernet/basic/README.md), which contains instructions for connecting and configuring the PHY. Once Ethernet example obtains IP address successfully, proceed to the protocols example and set the same configuration options.
+Al conectar usando Ethernet, configura el tipo de PHY y la configuración en los campos proporcionados. Si usas Ethernet por primera vez, se recomienda comenzar con el [readme del ejemplo de Ethernet](../ethernet/basic/README.md), que contiene instrucciones para conectar y configurar el PHY. Una vez que el ejemplo de Ethernet obtiene la dirección IP con éxito, procede al ejemplo de protocolos y establece las mismas opciones de configuración.
 
-### Disabling IPv6
+### Desactivación de IPv6
 
-By default, `example_connect()` function waits until Wi-Fi or Ethernet connection is established, and IPv4 address and IPv6 link-local address are obtained. In network environments where IPv6 link-local address cannot be obtained, disable "Obtain IPv6 link-local address" option found in "Example Connection Configuration" menu.
+Por defecto, la función `example_connect()` espera hasta que se establezca la conexión Wi-Fi o Ethernet, y se obtenga la dirección IPv4 y la dirección link-local IPv6. En entornos de red donde no se puede obtener la dirección link-local IPv6, desactiva la opción "Obtain IPv6 link-local address" que se encuentra en el menú "Example Connection Configuration".

@@ -1,44 +1,44 @@
 | Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-H2 | ESP32-S3 |
 | ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- |
 
-# BLE Peripheral Proximity Sensor Example
+# Ejemplo de Sensor de Proximidad BLE Periférico
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+(Consulta el archivo README.md en el directorio de 'examples' de nivel superior para obtener más información sobre los ejemplos).
 
-This example creates GATT server demonstrating standard Proximity Sensor profile. It notifies the application when the distance between devices increases.
+Este ejemplo crea un servidor GATT que demuestra el perfil estándar de Sensor de Proximidad. Notifica a la aplicación cuando la distancia entre dispositivos aumenta.
 
-It advertises support for the Link Loss service (0x1803) as primary service UUID.
+Anuncia soporte para el servicio de Pérdida de Enlace (Link Loss service, 0x1803) como UUID de servicio primario.
 
-The `ble_prox_prph_task` start alerting to application as soon as a write command is received from central regarding exceeding path loss. The alert stops when path loss is below low_threshold value.
+La tarea `ble_prox_prph_task` comienza a alertar a la aplicación tan pronto como se recibe un comando de escritura del dispositivo central relacionado con la pérdida de ruta que excede el umbral. La alerta se detiene cuando la pérdida de ruta está por debajo del valor de umbral bajo (low_threshold).
  
-It uses ESP32's Bluetooth controller and NimBLE stack based BLE host
+Utiliza el controlador Bluetooth de ESP32 y la pila BLE host basada en NimBLE.
 
-## How to Use Example
+## Cómo Usar el Ejemplo
 
-Before project configuration and build, be sure to set the correct chip target using:
+Antes de la configuración y compilación del proyecto, asegúrate de establecer el objetivo de chip correcto utilizando:
 
 ```bash
 idf.py set-target <chip_name>
 ```
 
-### Hardware Required
+### Hardware Requerido
 
-* A development board with ESP32/ESP32-C3 SoC (e.g., ESP32-DevKitC, ESP-WROVER-KIT, etc.)
-* A USB cable for Power supply and programming
+* Una placa de desarrollo con SoC ESP32/ESP32-C3 (p. ej., ESP32-DevKitC, ESP-WROVER-KIT, etc.)
+* Un cable USB para alimentación y programación
 
-See [Development Boards](https://www.espressif.com/en/products/devkits) for more information about it.
+Consulta [Placas de Desarrollo](https://www.espressif.com/en/products/devkits) para obtener más información al respecto.
 
-### Build and Flash
+### Compilar y Flashear
 
-Run `idf.py -p PORT flash monitor` to build, flash and monitor the project.
+Ejecuta `idf.py -p PUERTO flash monitor` para compilar, flashear y monitorear el proyecto.
 
-(To exit the serial monitor, type ``Ctrl-]``.)
+(Para salir del monitor serial, escribe ``Ctrl-]``.)
 
-See the [Getting Started Guide](https://idf.espressif.com/) for full steps to configure and use ESP-IDF to build projects.
+Consulta la [Guía de Inicio](https://idf.espressif.com/) para conocer los pasos completos para configurar y utilizar ESP-IDF para compilar proyectos.
 
-## Example Output
+## Salida del Ejemplo
 
-This console output can be observed when proximity_sensor_prph is connected to client:
+Esta salida de consola se puede observar cuando proximity_sensor_prph está conectado al cliente:
 
 ```
 I (356) BLE_INIT: BT controller compile version [a186b41]
@@ -84,6 +84,6 @@ I (43726) NimBLE: Path loss = -119
 
 ```
 
-## Troubleshooting
+## Solución de Problemas
 
-For any technical queries, please open an [issue](https://github.com/espressif/esp-idf/issues) on GitHub. We will get back to you soon.
+Para cualquier consulta técnica, por favor abre un [issue](https://github.com/espressif/esp-idf/issues) en GitHub. Te responderemos lo antes posible.

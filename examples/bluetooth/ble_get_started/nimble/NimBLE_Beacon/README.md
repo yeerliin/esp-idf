@@ -1,77 +1,77 @@
 | Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-H2 | ESP32-S3 |
 | ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- |
 
-# NimBLE Beacon Example
+# Ejemplo de Baliza NimBLE
 
-## Overview
+## Descripción General
 
-This is a pretty simple example, aiming to introduce
+Este es un ejemplo bastante simple, que tiene como objetivo introducir:
 
-1. How to initialize NimBLE stack
-2. How to configure advertisement and scan response data
-3. How to start advertising as a non-connectable beacon
+1. Cómo inicializar la pila NimBLE
+2. Cómo configurar los datos de publicidad y respuesta de escaneo
+3. Cómo iniciar la publicidad como una baliza no conectable
 
 
-To test this demo, install *nRF Connect for Mobile* on your phone. 
+Para probar esta demostración, instala *nRF Connect for Mobile* en tu teléfono. 
 
-Please refer to [BLE Device Discovery](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/ble/get-started/ble-device-discovery.html#:~:text=%E4%BE%8B%E7%A8%8B%E5%AE%9E%E8%B7%B5)
-for detailed example introduction and code explanation.
+Por favor, consulta [Descubrimiento de Dispositivos BLE](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/ble/get-started/ble-device-discovery.html#:~:text=%E4%BE%8B%E7%A8%8B%E5%AE%9E%E8%B7%B5)
+para obtener una introducción detallada del ejemplo y explicación del código.
 
-## Try It Yourself
+## Pruébalo Tú Mismo
 
-### Set Target
+### Establecer el Objetivo
 
-Before project configuration and build, be sure to set the correct chip target using:
+Antes de la configuración y compilación del proyecto, asegúrate de establecer el objetivo de chip correcto utilizando:
 
 ``` shell
 idf.py set-target <chip_name>
 ```
 
-For example, if you're using ESP32, then input
+Por ejemplo, si estás usando ESP32, entonces ingresa:
 
 ``` Shell
 idf.py set-target esp32
 ```
 
-### Build and Flash
+### Compilar y Flashear
 
-Run the following command to build, flash and monitor the project.
+Ejecuta el siguiente comando para compilar, flashear y monitorear el proyecto.
 
 ``` Shell
-idf.py -p <PORT> flash monitor
+idf.py -p <PUERTO> flash monitor
 ```
 
-For example, if the corresponding serial port is `/dev/ttyACM0`, then it goes
+Por ejemplo, si el puerto serial correspondiente es `/dev/ttyACM0`, entonces sería:
 
 ``` Shell
 idf.py -p /dev/ttyACM0 flash monitor
 ```
 
-(To exit the serial monitor, type ``Ctrl-]``.)
+(Para salir del monitor serial, escribe ``Ctrl-]``.)
 
-See the [Getting Started Guide](https://idf.espressif.com/) for full steps to configure and use ESP-IDF to build projects.
+Consulta la [Guía de Inicio](https://idf.espressif.com/) para conocer los pasos completos para configurar y utilizar ESP-IDF para compilar proyectos.
 
-## Code Explained
+## Código Explicado
 
-### Overview
+### Descripción General
 
-1. Initialize NVS flash, NimBLE host stack and GAP service; configure NimBLE host stack and start NimBLE host task thread
-2. Wait for NimBLE host stack to sync with BLE controller
-3. Set advertisement and scan response data, then configure advertising parameters and start advertising
+1. Inicializar el flash NVS, la pila host NimBLE y el servicio GAP; configurar la pila host NimBLE e iniciar el hilo de tarea del host NimBLE
+2. Esperar a que la pila host NimBLE se sincronice con el controlador BLE
+3. Establecer datos de publicidad y respuesta de escaneo, luego configurar parámetros de publicidad e iniciar la publicidad
 
-### Entry Point
+### Punto de Entrada
 
-`app_main` in `main.c` is the entry point of all ESP32 applications. In general, application initialization should be done here.
+`app_main` en `main.c` es el punto de entrada de todas las aplicaciones ESP32. En general, la inicialización de la aplicación debe hacerse aquí.
 
-First, call `nvs_flash_init` function to initialize NVS flash, which is the dependency for BLE module to store configurations.
+Primero, llama a la función `nvs_flash_init` para inicializar el flash NVS, que es la dependencia para que el módulo BLE almacene configuraciones.
 
 ``` C
 void app_main(void) {
-    /* Local variables */
+    /* Variables locales */
     int rc;
     esp_err_t ret;
 
-    /* NVS flash initialization */
+    /* Inicialización del flash NVS */
     ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES ||
         ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -87,13 +87,13 @@ void app_main(void) {
 }
 ```
 
-Then, call `nimble_port_init` function to initialize NimBLE host stack.
+Luego, llama a la función `nimble_port_init` para inicializar la pila host NimBLE.
 
 ``` C
 void app_main(void) {
     ...
 
-    /* NimBLE host stack initialization */
+    /* Inicialización de la pila host NimBLE */
     ret = nimble_port_init();
     if (ret != ESP_OK) {
         ESP_LOGE(TAG, "failed to initialize nimble stack, error code: %d ",
@@ -105,17 +105,17 @@ void app_main(void) {
 }
 ```
 
-After that, call `gap_init` defined in `gap.c`. We will initialize GAP service, set GAP device name and appearance in this function.
+Después de eso, llama a `gap_init` definido en `gap.c`. Inicializaremos el servicio GAP, estableceremos el nombre y la apariencia del dispositivo GAP en esta función.
 
 ``` C
 int gap_init(void) {
-    /* Local variables */
+    /* Variables locales */
     int rc = 0;
 
-    /* Initialize GAP service */
+    /* Inicializar servicio GAP */
     ble_svc_gap_init();
 
-    /* Set GAP device name */
+    /* Establecer nombre del dispositivo GAP */
     rc = ble_svc_gap_device_name_set(DEVICE_NAME);
     if (rc != 0) {
         ESP_LOGE(TAG, "failed to set device name to %s, error code: %d",
@@ -123,7 +123,7 @@ int gap_init(void) {
         return rc;
     }
 
-    /* Set GAP device appearance */
+    /* Establecer apariencia del dispositivo GAP */
     rc = ble_svc_gap_device_appearance_set(BLE_GAP_APPEARANCE_GENERIC_TAG);
     if (rc != 0) {
         ESP_LOGE(TAG, "failed to set device appearance, error code: %d", rc);
@@ -135,7 +135,7 @@ int gap_init(void) {
 void app_main(void) {
     ...
 
-    /* GAP service initialization */
+    /* Inicialización del servicio GAP */
     rc = gap_init();
     if (rc != 0) {
         ESP_LOGE(TAG, "failed to initialize GAP service, error code: %d", rc);
@@ -146,84 +146,84 @@ void app_main(void) {
 }
 ```
 
-And we need to configure some callback functions for NimBLE host stack to call and store the configurations in `nimble_host_config_init` in `main.c`.
+Y necesitamos configurar algunas funciones de callback para que la pila host NimBLE las llame y almacene las configuraciones en `nimble_host_config_init` en `main.c`.
 
 ``` C
 static void nimble_host_config_init(void) {
-    /* Set host callbacks */
+    /* Establecer callbacks del host */
     ble_hs_cfg.reset_cb = on_stack_reset;
     ble_hs_cfg.sync_cb = on_stack_sync;
     ble_hs_cfg.store_status_cb = ble_store_util_status_rr;
 
-    /* Store host configuration */
+    /* Almacenar configuración del host */
     ble_store_config_init();
 }
 
 void app_main(void) {
     ...
 
-    /* NimBLE host configuration initialization */
+    /* Inicialización de la configuración del host NimBLE */
     nimble_host_config_init();
 
     ...
 }
 ```
 
-So far, initialization has been done. We can call `xTaskCreate` to create `nimble_host_task` thread, and let NimBLE host stack run in the background.
+Hasta ahora, la inicialización ha sido completada. Podemos llamar a `xTaskCreate` para crear el hilo `nimble_host_task`, y dejar que la pila host NimBLE se ejecute en segundo plano.
 
 ``` C
 static void nimble_host_task(void *param) {
-    /* Task entry log */
+    /* Registro de entrada de tarea */
     ESP_LOGI(TAG, "nimble host task has been started!");
 
-    /* This function won't return until nimble_port_stop() is executed */
+    /* Esta función no retornará hasta que se ejecute nimble_port_stop() */
     nimble_port_run();
 
-    /* Clean up at exit */
+    /* Limpiar al salir */
     vTaskDelete(NULL);
 }
 
 void app_main(void) {
     ...
 
-    /* Start NimBLE host task thread and return */
+    /* Iniciar el hilo de tarea del host NimBLE y retornar */
     xTaskCreate(nimble_host_task, "NimBLE Host", 4*1024, NULL, 5, NULL);
     return;
 }
 ```
 
-### On Stack Sync
+### En Sincronización de Pila
 
-Once NimBLE host stack is synced with BLE controller, `on_stack_sync` in `gap.c` will be called by NimBLE host stack, which has been configured in `nimble_host_config_init`.
+Una vez que la pila host NimBLE se sincroniza con el controlador BLE, `on_stack_sync` en `gap.c` será llamada por la pila host NimBLE, que ha sido configurada en `nimble_host_config_init`.
 
-In this function, we will call `adv_init` function to ask NimBLE host stack to check if device MAC address is available by `ble_hs_util_ensure_addr` and `ble_hs_id_infer_auto` functions. If so, we will copy the address and try to start advertising by calling `start_advertising` in the same source file.
+En esta función, llamaremos a la función `adv_init` para pedirle a la pila host NimBLE que verifique si la dirección MAC del dispositivo está disponible mediante las funciones `ble_hs_util_ensure_addr` y `ble_hs_id_infer_auto`. Si es así, copiaremos la dirección e intentaremos iniciar la publicidad llamando a `start_advertising` en el mismo archivo fuente.
 
 ``` C
 static void on_stack_sync(void) {
-    /* On stack sync, do advertising initialization */
+    /* En la sincronización de la pila, realizar la inicialización de la publicidad */
     adv_init();
 }
 
 void adv_init(void) {
-    /* Local variables */
+    /* Variables locales */
     int rc = 0;
     char addr_str[18] = {0};
 
-    /* Make sure we have proper BT identity address set */
+    /* Asegurarse de que tengamos una dirección BT de identidad adecuada establecida */
     rc = ble_hs_util_ensure_addr(0);
     if (rc != 0) {
         ESP_LOGE(TAG, "device does not have any available bt address!");
         return;
     }
 
-    /* Figure out BT address to use while advertising */
+    /* Determinar la dirección BT a usar durante la publicidad */
     rc = ble_hs_id_infer_auto(0, &own_addr_type);
     if (rc != 0) {
         ESP_LOGE(TAG, "failed to infer address type, error code: %d", rc);
         return;
     }
 
-    /* Copy device address to addr_val */
+    /* Copiar la dirección del dispositivo a addr_val */
     rc = ble_hs_id_copy_addr(own_addr_type, addr_val, NULL);
     if (rc != 0) {
         ESP_LOGE(TAG, "failed to copy device address, error code: %d", rc);
@@ -232,20 +232,20 @@ void adv_init(void) {
     format_addr(addr_str, addr_val);
     ESP_LOGI(TAG, "device address: %s", addr_str);
 
-    /* Start advertising. */
+    /* Iniciar publicidad. */
     start_advertising();
 }
 ```
 
-### Start Advertising
+### Iniciar Publicidad
 
-As a beacon device, we're going to start advertising and send scan response if a scan request is received. To make it happen, we need to set advertisement and scan response data before advertising starts. So the following are what we do:
+Como un dispositivo baliza, vamos a iniciar la publicidad y enviar respuesta de escaneo si se recibe una solicitud de escaneo. Para que esto suceda, necesitamos establecer los datos de publicidad y respuesta de escaneo antes de que comience la publicidad. Así que lo siguiente es lo que hacemos:
 
-1. Initialize advertisement and scan response fields structs `adv_fields` and `rsp_fields`, as well as advertising parameters struct `adv_params`
+1. Inicializar las estructuras de campos de publicidad y respuesta de escaneo `adv_fields` y `rsp_fields`, así como la estructura de parámetros de publicidad `adv_params`
 
 ``` C
 static void start_advertising(void) {
-    /* Local variables */
+    /* Variables locales */
     int rc = 0;
     const char *name;
     struct ble_hs_adv_fields adv_fields = {0};
@@ -256,36 +256,36 @@ static void start_advertising(void) {
 }
 ```
 
-2. Set advertising flags, device name, transmit power, appearance and LE role in `adv_fields`, and call `ble_gap_adv_set_fields`
-    1. For adveritisng flags, `BLE_HS_ADV_F_DISC_GEN` means advertising is general discoverable, and `BLE_HS_ADV_F_BREDR_UNSUP` means BLE support only (BR/EDR refers to Bluetooth Classic)
-    2. For appearance, it is used to tell scanner what does it look like; we use `BLE_GAP_APPEARANCE_GENERIC_TAG` here to make our device identified as a tag
+2. Establecer banderas de publicidad, nombre del dispositivo, potencia de transmisión, apariencia y rol LE en `adv_fields`, y llamar a `ble_gap_adv_set_fields`
+    1. Para las banderas de publicidad, `BLE_HS_ADV_F_DISC_GEN` significa que la publicidad es descubrible generalmente, y `BLE_HS_ADV_F_BREDR_UNSUP` significa que solo se admite BLE (BR/EDR se refiere a Bluetooth Clásico)
+    2. Para la apariencia, se utiliza para indicar al escáner qué aspecto tiene; usamos `BLE_GAP_APPEARANCE_GENERIC_TAG` aquí para que nuestro dispositivo sea identificado como una etiqueta
 
 ``` C
 static void start_advertising(void) {
     ...
 
-    /* Set advertising flags */
+    /* Establecer banderas de publicidad */
     adv_fields.flags = BLE_HS_ADV_F_DISC_GEN | BLE_HS_ADV_F_BREDR_UNSUP;
 
-    /* Set device name */
+    /* Establecer nombre del dispositivo */
     name = ble_svc_gap_device_name();
     adv_fields.name = (uint8_t *)name;
     adv_fields.name_len = strlen(name);
     adv_fields.name_is_complete = 1;
 
-    /* Set device tx power */
+    /* Establecer potencia de transmisión del dispositivo */
     adv_fields.tx_pwr_lvl = BLE_HS_ADV_TX_PWR_LVL_AUTO;
     adv_fields.tx_pwr_lvl_is_present = 1;
 
-    /* Set device appearance */
+    /* Establecer apariencia del dispositivo */
     adv_fields.appearance = BLE_GAP_APPEARANCE_GENERIC_TAG;
     adv_fields.appearance_is_present = 1;
 
-    /* Set device LE role */
+    /* Establecer rol LE del dispositivo */
     adv_fields.le_role = BLE_GAP_LE_ROLE_PERIPHERAL;
     adv_fields.le_role_is_present = 1;
 
-    /* Set advertiement fields */
+    /* Establecer campos de publicidad */
     rc = ble_gap_adv_set_fields(&adv_fields);
     if (rc != 0) {
         ESP_LOGE(TAG, "failed to set advertising data, error code: %d", rc);
@@ -296,24 +296,24 @@ static void start_advertising(void) {
 }
 ```
 
-3. Set device address and URI in `rsp_fields`, and call `ble_gap_adv_rsp_set_fields`
-    1. Since `AdvData` in advertisement packet **should not be longer than 31 bytes**, additional information must be placed in scan response packet
-    2. We put the official website link of espressif into URI field
+3. Establecer dirección del dispositivo y URI en `rsp_fields`, y llamar a `ble_gap_adv_rsp_set_fields`
+    1. Ya que los `AdvData` en el paquete de publicidad **no deben ser más largos que 31 bytes**, la información adicional debe colocarse en el paquete de respuesta de escaneo
+    2. Colocamos el enlace al sitio web oficial de espressif en el campo URI
 
 ``` C
 static void start_advertising(void) {
     ...
 
-    /* Set device address */
+    /* Establecer dirección del dispositivo */
     rsp_fields.device_addr = addr_val;
     rsp_fields.device_addr_type = own_addr_type;
     rsp_fields.device_addr_is_present = 1;
 
-    /* Set URI */
+    /* Establecer URI */
     rsp_fields.uri = esp_uri;
     rsp_fields.uri_len = sizeof(esp_uri);
 
-    /* Set scan response fields */
+    /* Establecer campos de respuesta de escaneo */
     rc = ble_gap_adv_rsp_set_fields(&rsp_fields);
     if (rc != 0) {
         ESP_LOGE(TAG, "failed to set scan response data, error code: %d", rc);
@@ -324,17 +324,17 @@ static void start_advertising(void) {
 }
 ```
 
-4. Set advertising mode and discoverable mode to non-connectable and general-discoverable respectively in `adv_params`, and finally, start advertising by calling `ble_gap_adv_start`
+4. Establecer el modo de publicidad y el modo descubrible a no conectable y general-descubrible respectivamente en `adv_params`, y finalmente, iniciar la publicidad llamando a `ble_gap_adv_start`
 
 ``` C
 static void start_advertising(void) {
     ...
 
-    /* Set non-connetable and general discoverable mode to be a beacon */
+    /* Establecer modo no conectable y modo general descubrible para ser una baliza */
     adv_params.conn_mode = BLE_GAP_CONN_MODE_NON;
     adv_params.disc_mode = BLE_GAP_DISC_MODE_GEN;
 
-    /* Start advertising */
+    /* Iniciar publicidad */
     rc = ble_gap_adv_start(own_addr_type, NULL, BLE_HS_FOREVER, &adv_params,
                            NULL, NULL);
     if (rc != 0) {
@@ -345,10 +345,10 @@ static void start_advertising(void) {
 }
 ```
 
-### Observation
+### Observación
 
-If everything goes well, you should be able to see `NimBLE_Beacon` on a BLE scanner device, broadcasting a lot of information including an URI of "https://espressif.com" (The official website of espressif), which is exactly what we expect.
+Si todo va bien, deberías poder ver `NimBLE_Beacon` en un dispositivo escáner BLE, transmitiendo mucha información incluida una URI de "https://espressif.com" (El sitio web oficial de espressif), que es exactamente lo que esperamos.
 
-## Troubleshooting
+## Solución de Problemas
 
-For any technical queries, please file an [issue](https://github.com/espressif/esp-idf/issues) on GitHub. We will get back to you soon.
+Para cualquier consulta técnica, por favor abre un [issue](https://github.com/espressif/esp-idf/issues) en GitHub. Te responderemos lo antes posible.

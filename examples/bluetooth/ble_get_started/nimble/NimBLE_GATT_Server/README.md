@@ -1,76 +1,76 @@
 | Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-H2 | ESP32-S3 |
 | ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- |
 
-# NimBLE GATT Server Example
+# Ejemplo de Servidor GATT NimBLE
 
-## Overview
+## Descripción General
 
-This example is extended from NimBLE Connection Example, and further introduces
+Este ejemplo se extiende del Ejemplo de Conexión NimBLE, y además introduce:
 
-1. How to implement a GATT server using GATT services table
-2. How to handle characteristic access requests
-    1. Write access demonstrated by LED control
-    2. Read and indicate access demonstrated by heart rate measurement(mocked)
+1. Cómo implementar un servidor GATT utilizando la tabla de servicios GATT
+2. Cómo manejar solicitudes de acceso a características
+    1. Acceso de escritura demostrado mediante el control de LED
+    2. Acceso de lectura e indicación demostrado mediante la medición de frecuencia cardíaca (simulada)
 
-To test this demo, install *nRF Connect for Mobile* on your phone. 
+Para probar esta demostración, instala *nRF Connect for Mobile* en tu teléfono. 
 
-Please refer to [BLE Introduction](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/ble/get-started/ble-introduction.html#:~:text=%E4%BE%8B%E7%A8%8B%E5%AE%9E%E8%B7%B5)
-for detailed example introduction and code explanation.
+Por favor, consulta [Introducción a BLE](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/ble/get-started/ble-introduction.html#:~:text=%E4%BE%8B%E7%A8%8B%E5%AE%9E%E8%B7%B5)
+para obtener una introducción detallada del ejemplo y explicación del código.
 
-## Try It Yourself
+## Pruébalo Tú Mismo
 
-### Set Target
+### Establecer el Objetivo
 
-Before project configuration and build, be sure to set the correct chip target using:
+Antes de la configuración y compilación del proyecto, asegúrate de establecer el objetivo de chip correcto utilizando:
 
 ``` shell
 idf.py set-target <chip_name>
 ```
 
-For example, if you're using ESP32, then input
+Por ejemplo, si estás usando ESP32, entonces ingresa:
 
 ``` Shell
 idf.py set-target esp32
 ```
 
-### Build and Flash
+### Compilar y Flashear
 
-Run the following command to build, flash and monitor the project.
+Ejecuta el siguiente comando para compilar, flashear y monitorear el proyecto.
 
 ``` Shell
-idf.py -p <PORT> flash monitor
+idf.py -p <PUERTO> flash monitor
 ```
 
-For example, if the corresponding serial port is `/dev/ttyACM0`, then it goes
+Por ejemplo, si el puerto serial correspondiente es `/dev/ttyACM0`, entonces sería:
 
 ``` Shell
 idf.py -p /dev/ttyACM0 flash monitor
 ```
 
-(To exit the serial monitor, type ``Ctrl-]``.)
+(Para salir del monitor serial, escribe ``Ctrl-]``.)
 
-See the [Getting Started Guide](https://idf.espressif.com/) for full steps to configure and use ESP-IDF to build projects.
+Consulta la [Guía de Inicio](https://idf.espressif.com/) para conocer los pasos completos para configurar y utilizar ESP-IDF para compilar proyectos.
 
-## Code Explained
+## Código Explicado
 
-### Overview
+### Descripción General
 
-1. Initialization
-    1. Initialize LED, NVS flash, NimBLE host stack, GAP service
-    2. Initialize GATT service and add services to registration queue
-    3. Configure NimBLE host stack and start NimBLE host task thread, GATT services will be registered automatically when NimBLE host stack started
-    4. Start heart rate update task thread
-2. Wait for NimBLE host stack to sync with BLE controller, and start advertising; wait for connection event to come
-3. After connection established, wait for GATT characteristics access events to come
-    1. On write LED event, turn on or off the LED accordingly
-    2. On read heart rate event, send out current heart rate measurement value
-    3. On indicate heart rate event, enable heart rate indication
+1. Inicialización
+    1. Inicializar LED, flash NVS, pila host NimBLE, servicio GAP
+    2. Inicializar servicio GATT y agregar servicios a la cola de registro
+    3. Configurar la pila host NimBLE e iniciar el hilo de tarea del host NimBLE, los servicios GATT se registrarán automáticamente cuando se inicie la pila host NimBLE
+    4. Iniciar el hilo de tarea de actualización de frecuencia cardíaca
+2. Esperar a que la pila host NimBLE se sincronice con el controlador BLE y comience a publicitar; esperar a que lleguen eventos de conexión
+3. Después de establecer la conexión, esperar a que lleguen eventos de acceso a las características GATT
+    1. En el evento de escritura de LED, encender o apagar el LED en consecuencia
+    2. En el evento de lectura de frecuencia cardíaca, enviar el valor actual de medición de frecuencia cardíaca
+    3. En el evento de indicación de frecuencia cardíaca, habilitar la indicación de frecuencia cardíaca
 
-### Entry Point
+### Punto de Entrada
 
-In this example, we call GATT `gatt_svr_init` function to initialize GATT server in `app_main` before NimBLE host configuration. This is a custom function defined in `gatt_svc.c`, and basically we just call GATT service initialization API and add services to registration queue.
+En este ejemplo, llamamos a la función GATT `gatt_svr_init` para inicializar el servidor GATT en `app_main` antes de la configuración del host NimBLE. Esta es una función personalizada definida en `gatt_svc.c`, y básicamente solo llamamos a la API de inicialización del servicio GATT y agregamos servicios a la cola de registro.
 
-And there's another code added in `nimble_host_config_init`, which is 
+Y hay otro código agregado en `nimble_host_config_init`, que es:
 
 ``` C
 static void nimble_host_config_init(void) {
@@ -82,27 +82,27 @@ static void nimble_host_config_init(void) {
 }
 ```
 
-That is GATT server register callback function. In this case it will only print out some registration information when services, characteristics or descriptors are registered.
+Esa es la función de callback de registro del servidor GATT. En este caso, solo imprimirá alguna información de registro cuando se registren servicios, características o descriptores.
 
-Then, after NimBLE host task thread is created, we'll create another task defined in `heart_rate_task` to update heart rate measurement mock value and send indication if enabled.
+Luego, después de que se crea el hilo de tarea del host NimBLE, crearemos otra tarea definida en `heart_rate_task` para actualizar el valor simulado de la medición de frecuencia cardíaca y enviar indicación si está habilitado.
 
-### GAP Service Updates
+### Actualizaciones del Servicio GAP
 
-`gap_event_handler` is updated with LED control removed, and more event handling branches, when compared to NimBLE Connection Example, including
+`gap_event_handler` se actualiza con el control de LED eliminado y más ramas de manejo de eventos, en comparación con el Ejemplo de Conexión NimBLE, incluyendo:
 
-- `BLE_GAP_EVENT_ADV_COMPLETE` - Advertising complete event
-- `BLE_GAP_EVENT_NOTIFY_TX` - Notificate event
-- `BLE_GAP_EVENT_SUBSCRIBE` - Subscribe event
-- `BLE_GAP_EVENT_MTU` - MTU update event
+- `BLE_GAP_EVENT_ADV_COMPLETE` - Evento de publicidad completa
+- `BLE_GAP_EVENT_NOTIFY_TX` - Evento de notificación
+- `BLE_GAP_EVENT_SUBSCRIBE` - Evento de suscripción
+- `BLE_GAP_EVENT_MTU` - Evento de actualización de MTU
 
-`BLE_GAP_EVENT_ADV_COMPLETE` and `BLE_GAP_EVENT_MTU` events are actually not involved in this example, but we still put them down there for reference. `BLE_GAP_EVENT_NOTIFY_TX` and `BLE_GAP_EVENT_SUBSCRIBE` events will be discussed in the next section.
+Los eventos `BLE_GAP_EVENT_ADV_COMPLETE` y `BLE_GAP_EVENT_MTU` no están realmente involucrados en este ejemplo, pero los incluimos como referencia. Los eventos `BLE_GAP_EVENT_NOTIFY_TX` y `BLE_GAP_EVENT_SUBSCRIBE` se discutirán en la siguiente sección.
 
-### GATT Services Table
+### Tabla de Servicios GATT
 
-GATT services are defined in `ble_gatt_svc_def` struct array, with a variable name `gatt_svr_svcs` in this demo. We'll call it as the GATT services table in the following content.
+Los servicios GATT se definen en una matriz de estructuras `ble_gatt_svc_def`, con un nombre de variable `gatt_svr_svcs` en esta demostración. Lo llamaremos como la tabla de servicios GATT en el siguiente contenido.
 
 ``` C
-/* Heart rate service */
+/* Servicio de frecuencia cardíaca */
 static const ble_uuid16_t heart_rate_svc_uuid = BLE_UUID16_INIT(0x180D);
 
 static uint8_t heart_rate_chr_val[2] = {0};
@@ -113,35 +113,35 @@ static uint16_t heart_rate_chr_conn_handle = 0;
 static bool heart_rate_chr_conn_handle_inited = false;
 static bool heart_rate_ind_status = false;
 
-/* Automation IO service */
+/* Servicio de E/S de automatización */
 static const ble_uuid16_t auto_io_svc_uuid = BLE_UUID16_INIT(0x1815);
 static uint16_t led_chr_val_handle;
 static const ble_uuid128_t led_chr_uuid =
     BLE_UUID128_INIT(0x23, 0xd1, 0xbc, 0xea, 0x5f, 0x78, 0x23, 0x15, 0xde, 0xef,
                      0x12, 0x12, 0x25, 0x15, 0x00, 0x00);
 
-/* GATT services table */
+/* Tabla de servicios GATT */
 static const struct ble_gatt_svc_def gatt_svr_svcs[] = {
-    /* Heart rate service */
+    /* Servicio de frecuencia cardíaca */
     {.type = BLE_GATT_SVC_TYPE_PRIMARY,
      .uuid = &heart_rate_svc_uuid.u,
      .characteristics =
          (struct ble_gatt_chr_def[]){
-             {/* Heart rate characteristic */
+             {/* Característica de frecuencia cardíaca */
               .uuid = &heart_rate_chr_uuid.u,
               .access_cb = heart_rate_chr_access,
               .flags = BLE_GATT_CHR_F_READ | BLE_GATT_CHR_F_INDICATE,
               .val_handle = &heart_rate_chr_val_handle},
              {
-                 0, /* No more characteristics in this service. */
+                 0, /* No más características en este servicio. */
              }}},
 
-    /* Automation IO service */
+    /* Servicio de E/S de automatización */
     {
         .type = BLE_GATT_SVC_TYPE_PRIMARY,
         .uuid = &auto_io_svc_uuid.u,
         .characteristics =
-            (struct ble_gatt_chr_def[]){/* LED characteristic */
+            (struct ble_gatt_chr_def[]){/* Característica LED */
                                         {.uuid = &led_chr_uuid.u,
                                          .access_cb = led_chr_access,
                                          .flags = BLE_GATT_CHR_F_WRITE,
@@ -150,35 +150,35 @@ static const struct ble_gatt_svc_def gatt_svr_svcs[] = {
     },
     
     {
-        0, /* No more services. */
+        0, /* No más servicios. */
     },
 };
 ```
 
-In this table, there are two GATT primary services defined
+En esta tabla, hay dos servicios GATT primarios definidos:
 
-- Heart rate service with a UUID of `0x180D`
-- Automation IO service with a UUID of `0x1815`
+- Servicio de frecuencia cardíaca con un UUID de `0x180D`
+- Servicio de E/S de automatización con un UUID de `0x1815`
 
-#### Automation IO Service
+#### Servicio de E/S de Automatización
 
-Under automation IO service, there's a LED characteristic, with a vendor-specific UUID and write only permission.
+Bajo el servicio de E/S de automatización, hay una característica LED, con un UUID específico del proveedor y permiso de solo escritura.
 
-The characteristic is binded with `led_chr_access` callback function, in which the write access event is captured. The LED will be turned on or off according to the write value, quite straight-forward.
+La característica está vinculada con la función de callback `led_chr_access`, en la que se captura el evento de acceso de escritura. El LED se encenderá o apagará según el valor de escritura, bastante sencillo.
 
 ``` C
 static int led_chr_access(uint16_t conn_handle, uint16_t attr_handle,
                           struct ble_gatt_access_ctxt *ctxt, void *arg) {
-    /* Local variables */
+    /* Variables locales */
     int rc;
 
-    /* Handle access events */
-    /* Note: LED characteristic is write only */
+    /* Manejar eventos de acceso */
+    /* Nota: La característica LED es solo de escritura */
     switch (ctxt->op) {
 
-    /* Write characteristic event */
+    /* Evento de escritura de característica */
     case BLE_GATT_ACCESS_OP_WRITE_CHR:
-        /* Verify connection handle */
+        /* Verificar el identificador de conexión */
         if (conn_handle != BLE_HS_CONN_HANDLE_NONE) {
             ESP_LOGI(TAG, "characteristic write; conn_handle=%d attr_handle=%d",
                      conn_handle, attr_handle);
@@ -188,11 +188,11 @@ static int led_chr_access(uint16_t conn_handle, uint16_t attr_handle,
                      attr_handle);
         }
 
-        /* Verify attribute handle */
+        /* Verificar el identificador de atributo */
         if (attr_handle == led_chr_val_handle) {
-            /* Verify access buffer length */
+            /* Verificar la longitud del búfer de acceso */
             if (ctxt->om->om_len == 1) {
-                /* Turn the LED on or off according to the operation bit */
+                /* Encender o apagar el LED según el bit de operación */
                 if (ctxt->om->om_data[0]) {
                     led_on();
                     ESP_LOGI(TAG, "led turned on!");
@@ -207,7 +207,7 @@ static int led_chr_access(uint16_t conn_handle, uint16_t attr_handle,
         }
         goto error;
 
-    /* Unknown event */
+    /* Evento desconocido */
     default:
         goto error;
     }
@@ -220,36 +220,36 @@ error:
 }
 ```
 
-#### Heart Rate Service
+#### Servicio de Frecuencia Cardíaca
 
-Under heart rate service, there's a heart rate measurement characteristic, with a UUID of `0x2A37` and read + indicate access permission.
+Bajo el servicio de frecuencia cardíaca, hay una característica de medición de frecuencia cardíaca, con un UUID de `0x2A37` y permiso de acceso de lectura + indicación.
 
-The characteristic is binded with `heart_rate_chr_access` callback function, in which the read access event is captured. It should be mentioned that in SIG definition, heart rate measurement is a multi-byte data structure, with the first byte indicating the flags
+La característica está vinculada con la función de callback `heart_rate_chr_access`, en la que se captura el evento de acceso de lectura. Cabe mencionar que en la definición SIG, la medición de frecuencia cardíaca es una estructura de datos de múltiples bytes, con el primer byte indicando las banderas:
 
-- Bit 0: Heart rate value type
-    - 0: Heart rate value is `uint8_t` type
-    - 1: Heart rate value is `uint16_t` type
-- Bit 1: Sensor contact status
-- Bit 2: Sensor contact supported
-- Bit 3: Energy expended status
-- Bit 4: RR-interval status
-- Bit 5-7: Reserved
+- Bit 0: Tipo de valor de frecuencia cardíaca
+    - 0: El valor de frecuencia cardíaca es de tipo `uint8_t`
+    - 1: El valor de frecuencia cardíaca es de tipo `uint16_t`
+- Bit 1: Estado de contacto del sensor
+- Bit 2: Contacto del sensor soportado
+- Bit 3: Estado de energía gastada
+- Bit 4: Estado del intervalo RR
+- Bit 5-7: Reservado
 
-and the rest of bytes are data fields. In this case, we use `uint8_t` type and disable other features, making the characteristic value a 2-byte array. So when characteristic read event arrives, we'll get the latest heart rate value and send it back to peer device.
+y el resto de los bytes son campos de datos. En este caso, usamos el tipo `uint8_t` y deshabilitamos otras características, haciendo que el valor de la característica sea un array de 2 bytes. Así que cuando llega el evento de lectura de la característica, obtendremos el último valor de frecuencia cardíaca y lo enviaremos de vuelta al dispositivo par.
 
 ``` C
 static int heart_rate_chr_access(uint16_t conn_handle, uint16_t attr_handle,
                                  struct ble_gatt_access_ctxt *ctxt, void *arg) {
-    /* Local variables */
+    /* Variables locales */
     int rc;
 
-    /* Handle access events */
-    /* Note: Heart rate characteristic is read only */
+    /* Manejar eventos de acceso */
+    /* Nota: La característica de frecuencia cardíaca es de solo lectura */
     switch (ctxt->op) {
 
-    /* Read characteristic event */
+    /* Evento de lectura de característica */
     case BLE_GATT_ACCESS_OP_READ_CHR:
-        /* Verify connection handle */
+        /* Verificar el identificador de conexión */
         if (conn_handle != BLE_HS_CONN_HANDLE_NONE) {
             ESP_LOGI(TAG, "characteristic read; conn_handle=%d attr_handle=%d",
                      conn_handle, attr_handle);
@@ -258,9 +258,9 @@ static int heart_rate_chr_access(uint16_t conn_handle, uint16_t attr_handle,
                      attr_handle);
         }
 
-        /* Verify attribute handle */
+        /* Verificar el identificador de atributo */
         if (attr_handle == heart_rate_chr_val_handle) {
-            /* Update access buffer value */
+            /* Actualizar el valor del búfer de acceso */
             heart_rate_chr_val[1] = get_heart_rate();
             rc = os_mbuf_append(ctxt->om, &heart_rate_chr_val,
                                 sizeof(heart_rate_chr_val));
@@ -268,7 +268,7 @@ static int heart_rate_chr_access(uint16_t conn_handle, uint16_t attr_handle,
         }
         goto error;
 
-    /* Unknown event */
+    /* Evento desconocido */
     default:
         goto error;
     }
@@ -282,15 +282,15 @@ error:
 }
 ```
 
-Indicate access, however, is a bit more complicated. As mentioned in *GAP Service Updates*, we'll handle another 2 events namely `BLE_GAP_EVENT_NOTIFY_TX` and `BLE_GAP_EVENT_SUBSCRIBE` in `gap_event_handler`. In this case, if peer device wants to enable heart rate measurement indication, it will send a subscribe request to the local device, and the request will be captured as a subscribe event in `gap_event_handler`. But from the perspective of software layering, the event should be handled in GATT server, so we just pass the event to GATT server by calling `gatt_svr_subscribe_cb`, as demonstrated in the demo
+El acceso de indicación, sin embargo, es un poco más complicado. Como se mencionó en *Actualizaciones del Servicio GAP*, manejaremos otros 2 eventos, a saber, `BLE_GAP_EVENT_NOTIFY_TX` y `BLE_GAP_EVENT_SUBSCRIBE` en `gap_event_handler`. En este caso, si el dispositivo par quiere habilitar la indicación de medición de frecuencia cardíaca, enviará una solicitud de suscripción al dispositivo local, y la solicitud será capturada como un evento de suscripción en `gap_event_handler`. Pero desde la perspectiva de la capa de software, el evento debe ser manejado en el servidor GATT, así que solo pasamos el evento al servidor GATT llamando a `gatt_svr_subscribe_cb`, como se demuestra en la demostración:
 
 ``` C
 static int gap_event_handler(struct ble_gap_event *event, void *arg) {
     ...
 
-    /* Subscribe event */
+    /* Evento de suscripción */
     case BLE_GAP_EVENT_SUBSCRIBE:
-        /* Print subscription info to log */
+        /* Imprimir información de suscripción en el registro */
         ESP_LOGI(TAG,
                     "subscribe event; conn_handle=%d attr_handle=%d "
                     "reason=%d prevn=%d curn=%d previ=%d curi=%d",
@@ -299,7 +299,7 @@ static int gap_event_handler(struct ble_gap_event *event, void *arg) {
                     event->subscribe.cur_notify, event->subscribe.prev_indicate,
                     event->subscribe.cur_indicate);
 
-        /* GATT subscribe event callback */
+        /* Callback de evento de suscripción GATT */
         gatt_svr_subscribe_cb(event);
         return rc;
     
@@ -307,11 +307,11 @@ static int gap_event_handler(struct ble_gap_event *event, void *arg) {
 }
 ```
 
-Then we'll check connection handle and attribute handle, if the attribute handle matches `heart_rate_chr_val_chandle`, `heart_rate_chr_conn_handle` and `heart_rate_ind_status` will be updated together. 
+Luego verificaremos el identificador de conexión y el identificador de atributo, si el identificador de atributo coincide con `heart_rate_chr_val_chandle`, se actualizarán juntos `heart_rate_chr_conn_handle` y `heart_rate_ind_status`. 
 
 ``` C
 void gatt_svr_subscribe_cb(struct ble_gap_event *event) {
-    /* Check connection handle */
+    /* Verificar el identificador de conexión */
     if (event->subscribe.conn_handle != BLE_HS_CONN_HANDLE_NONE) {
         ESP_LOGI(TAG, "subscribe event; conn_handle=%d attr_handle=%d",
                  event->subscribe.conn_handle, event->subscribe.attr_handle);
@@ -320,9 +320,9 @@ void gatt_svr_subscribe_cb(struct ble_gap_event *event) {
                  event->subscribe.attr_handle);
     }
 
-    /* Check attribute handle */
+    /* Verificar el identificador de atributo */
     if (event->subscribe.attr_handle == heart_rate_chr_val_handle) {
-        /* Update heart rate subscription status */
+        /* Actualizar el estado de suscripción de frecuencia cardíaca */
         heart_rate_chr_conn_handle = event->subscribe.conn_handle;
         heart_rate_chr_conn_handle_inited = true;
         heart_rate_ind_status = event->subscribe.cur_indicate;
@@ -330,7 +330,7 @@ void gatt_svr_subscribe_cb(struct ble_gap_event *event) {
 }
 ```
 
-Notice that heart rate measurement incation is handled in `heart_rate_task` by calling `send_heart_rate_indication` function periodically. Actually, this function will check heart rate indication status and send indication accordingly. In this way, heart rate indication is implemented.
+Ten en cuenta que la indicación de medición de frecuencia cardíaca se maneja en `heart_rate_task` llamando a la función `send_heart_rate_indication` periódicamente. En realidad, esta función verificará el estado de indicación de frecuencia cardíaca y enviará la indicación en consecuencia. De esta manera, se implementa la indicación de frecuencia cardíaca.
 
 ``` C
 void send_heart_rate_indication(void) {
@@ -342,40 +342,40 @@ void send_heart_rate_indication(void) {
 }
 
 static void heart_rate_task(void *param) {
-    /* Task entry log */
+    /* Entrada de tarea en el registro */
     ESP_LOGI(TAG, "heart rate task has been started!");
 
-    /* Loop forever */
+    /* Bucle infinito */
     while (1) {
-        /* Update heart rate value every 1 second */
+        /* Actualizar el valor de frecuencia cardíaca cada 1 segundo */
         update_heart_rate();
         ESP_LOGI(TAG, "heart rate updated to %d", get_heart_rate());
 
-        /* Send heart rate indication if enabled */
+        /* Enviar indicación de frecuencia cardíaca si está habilitada */
         send_heart_rate_indication();
 
-        /* Sleep */
+        /* Dormir */
         vTaskDelay(HEART_RATE_TASK_PERIOD);
     }
 
-    /* Clean up at exit */
+    /* Limpiar al salir */
     vTaskDelete(NULL);
 }
 ```
 
-## Observation
+## Observación
 
-If everything goes well, you should be able to see 4 services when connected to ESP32, including
+Si todo va bien, deberías poder ver 4 servicios cuando te conectes a ESP32, incluyendo:
 
-- Generic Access
-- Generic Attribute
-- Heart Rate
-- Automation IO
+- Acceso Genérico
+- Atributo Genérico
+- Frecuencia Cardíaca
+- E/S de Automatización
 
-Click on Automation IO Service, you should be able to see LED characteristic. Click on upload button, you should be able to write `ON` or `OFF` value. Send it to the device, LED will be turned on or off following your instruction.
+Haz clic en el Servicio de E/S de Automatización, deberías poder ver la característica LED. Haz clic en el botón de carga, deberías poder escribir el valor `ON` u `OFF`. Envíalo al dispositivo, el LED se encenderá o apagará siguiendo tu instrucción.
 
-Click on Heart Rate Service, you should be able to see Heart Rate Measurement characteristic. Click on download button, you should be able to see the latest heart rate measurement mock value, and it should be consistent with what is shown on serial output. Click on subscribe button, you should be able to see the heart rate measurement mock value updated every second.
+Haz clic en el Servicio de Frecuencia Cardíaca, deberías poder ver la característica de Medición de Frecuencia Cardíaca. Haz clic en el botón de descarga, deberías poder ver el último valor simulado de medición de frecuencia cardíaca, y debería ser consistente con lo que se muestra en la salida serial. Haz clic en el botón de suscripción, deberías poder ver el valor simulado de medición de frecuencia cardíaca actualizado cada segundo.
 
-## Troubleshooting
+## Solución de Problemas
 
-For any technical queries, please file an [issue](https://github.com/espressif/esp-idf/issues) on GitHub. We will get back to you soon.
+Para cualquier consulta técnica, por favor abre un [issue](https://github.com/espressif/esp-idf/issues) en GitHub. Te responderemos lo antes posible.

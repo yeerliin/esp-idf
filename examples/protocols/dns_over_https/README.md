@@ -1,81 +1,81 @@
 | Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-H2 | ESP32-P4 | ESP32-S2 | ESP32-S3 |
 | ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- | -------- | -------- |
 
-# DNS over HTTPS Example
+# Ejemplo de DNS sobre HTTPS
 
-This example demonstrates how to use the DNS over HTTPS (DoH) component in an ESP32 application. The example resolves domain names securely via HTTPS using the configured DNS over HTTPS provider (Google(default), Cloudflare, or a custom server).
+Este ejemplo demuestra cómo utilizar el componente DNS sobre HTTPS (DoH) en una aplicación ESP32. El ejemplo resuelve nombres de dominio de manera segura a través de HTTPS utilizando el proveedor de DNS sobre HTTPS configurado (Google (por defecto), Cloudflare o un servidor personalizado).
 
-## Features
+## Características
 
-- **DNS over HTTPS**: Resolves domain names securely using HTTPS.
+- **DNS sobre HTTPS**: Resuelve nombres de dominio de forma segura utilizando HTTPS.
 
-## Certificate Options
-This example provides two certificate options for DNS over HTTPS:
+## Opciones de Certificado
+Este ejemplo proporciona dos opciones de certificado para DNS sobre HTTPS:
 
-1. Internal Certificate Bundle (Default): By default, the example uses an internal certificate bundle, making it easy to get started with popular DoH providers like Google and Cloudflare.
-2. Custom Certificate: If you prefer to use your own DoH server and certificate, you can configure the server name in menuconfig and place your custom certificate in the `cert_custom_root.pem` file. This option provides flexibility if you have specific security or server requirements.
+1. Paquete de Certificados Interno (Predeterminado): Por defecto, el ejemplo utiliza un paquete de certificados interno, facilitando el uso de proveedores populares de DoH como Google y Cloudflare.
+2. Certificado Personalizado: Si prefieres utilizar tu propio servidor DoH y certificado, puedes configurar el nombre del servidor en menuconfig y colocar tu certificado personalizado en el archivo `cert_custom_root.pem`. Esta opción proporciona flexibilidad si tienes requisitos específicos de seguridad o servidor.
 
-To configure the certificate option in menuconfig, navigate to `Example DNS-over-HTTPS Configuration → Use internal certificate bundle` to enable or disable the internal bundle.
+Para configurar la opción de certificado en menuconfig, navega a `Example DNS-over-HTTPS Configuration → Use internal certificate bundle` para habilitar o deshabilitar el paquete interno.
 
-## Configuration
+## Configuración
 
-Before building and running the example, you need to configure the DNS over HTTPS provider in `menuconfig`:
+Antes de compilar y ejecutar el ejemplo, es necesario configurar el proveedor de DNS sobre HTTPS en `menuconfig`:
 
-1. Run `idf.py menuconfig`.
-2. Look for the **Example DNS-over-HTTPS Configuration** section.
-3. Choose your preferred DNS server:
-    * Google DNS (default: dns.google)
+1. Ejecuta `idf.py menuconfig`.
+2. Busca la sección **Example DNS-over-HTTPS Configuration**.
+3. Elige tu proveedor de DNS preferido:
+    * Google DNS (predeterminado: dns.google)
     * Cloudflare DNS (cloudflare-dns.com)
-    * Custom DNS-over-HTTPS Server
-4. For custom DNS configuration enter the custom DNS-over-HTTPS server URL.
-5. Specify a custom DNS-over-HTTPS query path (default: dns-query).
-6. Toggle whether to use the internal certificate bundle:
-    * If disabled, specify the DNS certificate (cert_custom_root.pem).
-7. Save your changes and exit the configuration menu.
-8. Configure Wi-Fi or Ethernet to join a network. See "Establishing Wi-Fi or Ethernet Connection" section in [examples/protocols/README.md](../../README.md) for more details.
+    * Servidor DNS-over-HTTPS personalizado
+4. Para la configuración de DNS personalizado, introduce la URL del servidor DNS-over-HTTPS personalizado.
+5. Especifica una ruta de consulta DNS-over-HTTPS personalizada (predeterminado: dns-query).
+6. Activa o desactiva el uso del paquete de certificados interno:
+    * Si está desactivado, especifica el certificado DNS (cert_custom_root.pem).
+7. Guarda los cambios y sal del menú de configuración.
+8. Configura Wi-Fi o Ethernet para unirte a una red. Consulta la sección "Establecimiento de Conexión Wi-Fi o Ethernet" en [examples/protocols/README.md](../../README.md) para más detalles.
 
-## How It Works
+## Cómo Funciona
 
-1. **Network Initialization**: The application initializes the network interfaces (Wi-Fi or Ethernet) and establishes a connection.
-2. **NVS Initialization**: Non-Volatile Storage (NVS) is initialized to store and retrieve system time across reboots.
-3. **DNS over HTTPS Initialization**: The `init_dns_over_https()` function initializes the DNS over HTTPS resolver, which securely handles DNS queries using HTTPS.
-4. **Performing getaddrinfo**: The application executes the getaddrinfo operation for several domain names.
+1. **Inicialización de Red**: La aplicación inicializa las interfaces de red (Wi-Fi o Ethernet) y establece una conexión.
+2. **Inicialización de NVS**: Se inicializa el Almacenamiento No Volátil (NVS) para almacenar y recuperar la hora del sistema entre reinicios.
+3. **Inicialización de DNS sobre HTTPS**: La función `init_dns_over_https()` inicializa el resolvedor DNS sobre HTTPS, que maneja de forma segura las consultas DNS utilizando HTTPS.
+4. **Realizando getaddrinfo**: La aplicación ejecuta la operación getaddrinfo para varios nombres de dominio.
 
-## How to use example
-Before project configuration and build, be sure to set the correct chip target using `idf.py set-target <chip_name>`.
+## Cómo usar el ejemplo
+Antes de la configuración y compilación del proyecto, asegúrate de establecer el objetivo de chip correcto usando `idf.py set-target <chip_name>`.
 
-### Hardware Required
+### Hardware Requerido
 
-* A development board with ESP32/ESP32-S2/ESP32-C3 SoC (e.g., ESP32-DevKitC, ESP-WROVER-KIT, etc.)
-* A USB cable for power supply and programming
+* Una placa de desarrollo con SoC ESP32/ESP32-S2/ESP32-C3 (p. ej., ESP32-DevKitC, ESP-WROVER-KIT, etc.)
+* Un cable USB para alimentación y programación
 
-### Build and Flash
+### Compilar y Flashear
 
-Build the project and flash it to the board, then run monitor tool to view serial output:
+Compila el proyecto y flashéalo en la placa, luego ejecuta la herramienta de monitor para ver la salida serial:
 
 ```
-idf.py -p PORT flash monitor
+idf.py -p PUERTO flash monitor
 ```
 
-(Replace PORT with the name of the serial port to use.)
+(Reemplaza PUERTO con el nombre del puerto serial a utilizar.)
 
-(To exit the serial monitor, type ``Ctrl-]``.)
+(Para salir del monitor serial, escribe ``Ctrl-]``.)
 
-See the Getting Started Guide for full steps to configure and use ESP-IDF to build projects.
-
-
-## Troubleshooting Tips
-
-* **Connectivity**:
-	Ensure that the network connection details are accurate. For example, verify the Wi-Fi SSID and password or check that the Ethernet connection is secure and not faulty.
-
-* **Stack Overflow Errors**:
-	If you encounter a stack overflow, it might indicate that the DNS server is returning a lengthy error message. To diagnose the issue, try increasing the stack size to retrieve more detailed information.
- * **Incorrect Path Issues**:
-	Occasionally, stack overflow error is caused by an incorrect server path. Verify the server details and ensure the server path is correctly configured.
+Consulta la Guía de Inicio para conocer los pasos completos para configurar y utilizar ESP-IDF para compilar proyectos.
 
 
-## Example Output
+## Consejos de Solución de Problemas
+
+* **Conectividad**:
+	Asegúrate de que los detalles de conexión de red sean precisos. Por ejemplo, verifica el SSID y la contraseña de Wi-Fi o comprueba que la conexión Ethernet esté segura y no sea defectuosa.
+
+* **Errores de Desbordamiento de Pila**:
+	Si encuentras un desbordamiento de pila, podría indicar que el servidor DNS está devolviendo un mensaje de error extenso. Para diagnosticar el problema, intenta aumentar el tamaño de la pila para obtener información más detallada.
+ * **Problemas de Ruta Incorrecta**:
+	Ocasionalmente, el error de desbordamiento de pila es causado por una ruta de servidor incorrecta. Verifica los detalles del servidor y asegúrate de que la ruta del servidor esté configurada correctamente.
+
+
+## Ejemplo de Salida
 
 ```
 I (4652) esp_netif_handlers: example_netif_sta ip: 192.168.50.136, mask: 255.255.255.0, gw: 192.168.50.1

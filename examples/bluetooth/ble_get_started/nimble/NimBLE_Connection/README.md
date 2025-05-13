@@ -1,85 +1,85 @@
 | Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-H2 | ESP32-S3 |
 | ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- |
 
-# NimBLE Connection Example
+# Ejemplo de Conexión NimBLE
 
-## Overview
+## Descripción General
 
-This example is extended from NimBLE Beacon Example, and further introduces
+Este ejemplo se extiende del Ejemplo de Baliza NimBLE, y además introduce:
 
-1. How to advertise as a connectable peripheral device
-2. How to capture GAP events and handle them
-3. How to update connection parameters
+1. Cómo publicitar como un dispositivo periférico conectable
+2. Cómo capturar eventos GAP y manejarlos
+3. Cómo actualizar parámetros de conexión
 
 
-To test this demo, install *nRF Connect for Mobile* on your phone. 
+Para probar esta demostración, instala *nRF Connect for Mobile* en tu teléfono. 
 
-Please refer to [BLE Connection](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/ble/get-started/ble-connection.html#:~:text=%E4%BE%8B%E7%A8%8B%E5%AE%9E%E8%B7%B5)
-for detailed example introduction and code explanation.
+Por favor, consulta [Conexión BLE](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/ble/get-started/ble-connection.html#:~:text=%E4%BE%8B%E7%A8%8B%E5%AE%9E%E8%B7%B5)
+para obtener una introducción detallada del ejemplo y explicación del código.
 
-## Try It Yourself
+## Pruébalo Tú Mismo
 
-### Set Target
+### Establecer el Objetivo
 
-Before project configuration and build, be sure to set the correct chip target using:
+Antes de la configuración y compilación del proyecto, asegúrate de establecer el objetivo de chip correcto utilizando:
 
 ``` shell
 idf.py set-target <chip_name>
 ```
 
-For example, if you're using ESP32, then input
+Por ejemplo, si estás usando ESP32, entonces ingresa:
 
 ``` Shell
 idf.py set-target esp32
 ```
 
-### Build and Flash
+### Compilar y Flashear
 
-Run the following command to build, flash and monitor the project.
+Ejecuta el siguiente comando para compilar, flashear y monitorear el proyecto.
 
 ``` Shell
-idf.py -p <PORT> flash monitor
+idf.py -p <PUERTO> flash monitor
 ```
 
-For example, if the corresponding serial port is `/dev/ttyACM0`, then it goes
+Por ejemplo, si el puerto serial correspondiente es `/dev/ttyACM0`, entonces sería:
 
 ``` Shell
 idf.py -p /dev/ttyACM0 flash monitor
 ```
 
-(To exit the serial monitor, type ``Ctrl-]``.)
+(Para salir del monitor serial, escribe ``Ctrl-]``.)
 
-See the [Getting Started Guide](https://idf.espressif.com/) for full steps to configure and use ESP-IDF to build projects.
+Consulta la [Guía de Inicio](https://idf.espressif.com/) para conocer los pasos completos para configurar y utilizar ESP-IDF para compilar proyectos.
 
-## Code Explained
+## Código Explicado
 
-### Overview
+### Descripción General
 
-1. Initialize LED, NVS flash, NimBLE host stack and GAP service; configure NimBLE host stack and start NimBLE host task thread; wait for NimBLE host stack to sync with BLE controller
-2. Set advertisement and scan response data, then configure advertising parameters and start advertising
-3. On connect event
-    1. Turn on the LED on the dev board
-    2. Print out connection descriptions
-    3. Update connection parameters
-4. On connection update event
-    1. Print out connection descriptions
-5. On disconnect event
-    1. Turn off the LED on the dev board
-    2. Print out connection descriptions
+1. Inicializar LED, flash NVS, pila host NimBLE y servicio GAP; configurar la pila host NimBLE e iniciar el hilo de tarea del host NimBLE; esperar a que la pila host NimBLE se sincronice con el controlador BLE
+2. Establecer datos de publicidad y respuesta de escaneo, luego configurar parámetros de publicidad e iniciar la publicidad
+3. En el evento de conexión
+    1. Encender el LED en la placa de desarrollo
+    2. Imprimir descripciones de conexión
+    3. Actualizar parámetros de conexión
+4. En el evento de actualización de conexión
+    1. Imprimir descripciones de conexión
+5. En el evento de desconexión
+    1. Apagar el LED en la placa de desarrollo
+    2. Imprimir descripciones de conexión
 
-### Entry Point & On Stack Sync
+### Punto de Entrada y En Sincronización de Pila
 
-Please refer to the NimBLE Beacon Example for details.
+Por favor, consulta el Ejemplo de Baliza NimBLE para obtener detalles.
 
-### Start Advertising
+### Iniciar Publicidad
 
-There're some slight differences in this example when compared to NimBLE Beacon Example. First, in this example we are constructing a connectable peripheral, so connection mode is set to connectable, that is 
+Hay algunas ligeras diferencias en este ejemplo en comparación con el Ejemplo de Baliza NimBLE. Primero, en este ejemplo estamos construyendo un periférico conectable, por lo que el modo de conexión se establece como conectable, es decir:
 
 ``` C
 static void start_advertising(void) {
     ...
 
-    /* Set non-connetable and general discoverable mode to be a beacon */
+    /* Establecer modo no conectable y modo general descubrible para ser una baliza */
     adv_params.conn_mode = BLE_GAP_CONN_MODE_UND;
     adv_params.disc_mode = BLE_GAP_DISC_MODE_GEN;
 
@@ -87,19 +87,19 @@ static void start_advertising(void) {
 }
 ```
 
-Also, to demonstrate advertising parameters settings, advertising interval parameters are modified to 500ms, and shown in scan response. Please note that the unit of advertising interval is 0.625ms.
+Además, para demostrar la configuración de parámetros de publicidad, los parámetros de intervalo de publicidad se modifican a 500ms, y se muestran en la respuesta de escaneo. Ten en cuenta que la unidad del intervalo de publicidad es 0.625ms.
 
 ``` C
 static void start_advertising(void) {
     ...
 
-    /* Set advertising interval */
+    /* Establecer intervalo de publicidad */
     rsp_fields.adv_itvl = BLE_GAP_ADV_ITVL_MS(500);
     rsp_fields.adv_itvl_is_present = 1;
 
     ...
 
-    /* Set advertising interval */
+    /* Establecer intervalo de publicidad */
     adv_params.itvl_min = BLE_GAP_ADV_ITVL_MS(500);
     adv_params.itvl_max = BLE_GAP_ADV_ITVL_MS(510);
 
@@ -107,13 +107,13 @@ static void start_advertising(void) {
 }
 ```
 
-And finally, when calling the advertising start API, a callback function `gap_event_handler` is passed as argument to receive GAP events. We'll talk about it in the next section.
+Y finalmente, al llamar a la API para iniciar la publicidad, se pasa una función de callback `gap_event_handler` como argumento para recibir eventos GAP. Hablaremos de esto en la siguiente sección.
 
 ``` C
 static void start_advertising(void) {
     ...
 
-    /* Start advertising */
+    /* Iniciar publicidad */
     rc = ble_gap_adv_start(own_addr_type, NULL, BLE_HS_FOREVER, &adv_params,
                            gap_event_handler, NULL);
     if (rc != 0) {
@@ -124,45 +124,45 @@ static void start_advertising(void) {
 }
 ```
 
-### On GAP Events
+### En Eventos GAP
 
-To keep it simple, we're interested in 3 GAP events at the moment
+Para mantenerlo simple, estamos interesados en 3 eventos GAP por el momento:
 
-- `BLE_GAP_EVENT_CONNECT` - Connect event
-- `BLE_GAP_EVENT_DISCONNECT` - Disconnect event
-- `BLE_GAP_EVENT_CONN_UPDATE` - Connection update event
+- `BLE_GAP_EVENT_CONNECT` - Evento de conexión
+- `BLE_GAP_EVENT_DISCONNECT` - Evento de desconexión
+- `BLE_GAP_EVENT_CONN_UPDATE` - Evento de actualización de conexión
 
-#### Connect Event
+#### Evento de Conexión
 
-When the device is connected to a peer device or a connection failed, a connect event will be passed to `gap_event_handler` by NimBLE host stack. We'll first check the connection status
+Cuando el dispositivo se conecta a un dispositivo par o falla una conexión, se pasará un evento de conexión a `gap_event_handler` por la pila host NimBLE. Primero verificaremos el estado de la conexión:
 
-- If succeeded
-    - Get connection descriptor by connection handle and print out
-    - Turn on the LED
-    - Try to update connection parameters
-- If failed
-    - Re-start advertising
+- Si tuvo éxito
+    - Obtener el descriptor de conexión por el identificador de conexión e imprimirlo
+    - Encender el LED
+    - Intentar actualizar los parámetros de conexión
+- Si falló
+    - Reiniciar la publicidad
 
 ``` C
-/* Connect event */
+/* Evento de conexión */
 static int gap_event_handler(struct ble_gap_event *event, void *arg) {
-    /* Local variables */
+    /* Variables locales */
     int rc = 0;
     struct ble_gap_conn_desc desc;
 
-    /* Handle different GAP event */
+    /* Manejar diferentes eventos GAP */
     switch (event->type) {
 
-    /* Connect event */
+    /* Evento de conexión */
     case BLE_GAP_EVENT_CONNECT:
-        /* A new connection was established or a connection attempt failed. */
+        /* Se estableció una nueva conexión o falló un intento de conexión. */
         ESP_LOGI(TAG, "connection %s; status=%d",
                  event->connect.status == 0 ? "established" : "failed",
                  event->connect.status);
 
-        /* Connection succeeded */
+        /* Conexión exitosa */
         if (event->connect.status == 0) {
-            /* Check connection handle */
+            /* Verificar el identificador de conexión */
             rc = ble_gap_conn_find(event->connect.conn_handle, &desc);
             if (rc != 0) {
                 ESP_LOGE(TAG,
@@ -171,11 +171,11 @@ static int gap_event_handler(struct ble_gap_event *event, void *arg) {
                 return rc;
             }
 
-            /* Print connection descriptor and turn on the LED */
+            /* Imprimir el descriptor de conexión y encender el LED */
             print_conn_desc(&desc);
             led_on();
 
-            /* Try to update connection parameters */
+            /* Intentar actualizar los parámetros de conexión */
             struct ble_gap_upd_params params = {.itvl_min = desc.conn_itvl,
                                                 .itvl_max = desc.conn_itvl,
                                                 .latency = 3,
@@ -190,7 +190,7 @@ static int gap_event_handler(struct ble_gap_event *event, void *arg) {
                 return rc;
             }
         }
-        /* Connection failed, restart advertising */
+        /* Falló la conexión, reiniciar publicidad */
         else {
             start_advertising();
         }
@@ -201,28 +201,28 @@ static int gap_event_handler(struct ble_gap_event *event, void *arg) {
 }
 ```
 
-#### Disconnect Event
+#### Evento de Desconexión
 
-On disconnect event, we simply 
+En el evento de desconexión, simplemente:
 
-1. Print out disconnect reason and connection descriptor
-2. Turn off the LED
-3. Re-start advertising
+1. Imprimimos la razón de la desconexión y el descriptor de conexión
+2. Apagamos el LED
+3. Reiniciamos la publicidad
 
 ``` C
 static int gap_event_handler(struct ble_gap_event *event, void *arg) {
     ...
 
-    /* Disconnect event */
+    /* Evento de desconexión */
     case BLE_GAP_EVENT_DISCONNECT:
-        /* A connection was terminated, print connection descriptor */
+        /* Se terminó una conexión, imprimir el descriptor de conexión */
         ESP_LOGI(TAG, "disconnected from peer; reason=%d",
                  event->disconnect.reason);
 
-        /* Turn off the LED */
+        /* Apagar el LED */
         led_off();
 
-        /* Restart advertising */
+        /* Reiniciar publicidad */
         start_advertising();
         return rc;
 
@@ -230,24 +230,24 @@ static int gap_event_handler(struct ble_gap_event *event, void *arg) {
 }
 ```
 
-#### Connection Update Event
+#### Evento de Actualización de Conexión
 
-On connection update event, the operation is also very simple
+En el evento de actualización de conexión, la operación también es muy simple:
 
-1. Print out connection status
-2. Get connection descriptor by connection handle and print out
+1. Imprimir el estado de la conexión
+2. Obtener el descriptor de conexión por el identificador de conexión e imprimirlo
 
 ``` C
 static int gap_event_handler(struct ble_gap_event *event, void *arg) {
     ...
 
-    /* Connection parameters update event */
+    /* Evento de actualización de parámetros de conexión */
     case BLE_GAP_EVENT_CONN_UPDATE:
-        /* The central has updated the connection parameters. */
+        /* El dispositivo central ha actualizado los parámetros de conexión. */
         ESP_LOGI(TAG, "connection updated; status=%d",
                     event->conn_update.status);
 
-        /* Print connection descriptor */
+        /* Imprimir el descriptor de conexión */
         rc = ble_gap_conn_find(event->conn_update.conn_handle, &desc);
         if (rc != 0) {
             ESP_LOGE(TAG, "failed to find connection by handle, error code: %d",
@@ -261,10 +261,10 @@ static int gap_event_handler(struct ble_gap_event *event, void *arg) {
 }
 ```
 
-## Observation
+## Observación
 
-If everything goes well, except for what we have seen in NimBLE Beacon example, you should be able to see LED turned on when device is connected, and see LED turned off on disconnection.
+Si todo va bien, además de lo que hemos visto en el ejemplo de Baliza NimBLE, deberías poder ver el LED encendido cuando el dispositivo está conectado, y ver el LED apagado al desconectarse.
 
-## Troubleshooting
+## Solución de Problemas
 
-For any technical queries, please file an [issue](https://github.com/espressif/esp-idf/issues) on GitHub. We will get back to you soon.
+Para cualquier consulta técnica, por favor abre un [issue](https://github.com/espressif/esp-idf/issues) en GitHub. Te responderemos lo antes posible.

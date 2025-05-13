@@ -1,5 +1,5 @@
-# Network Examples
+# Ejemplos de Red
 
-Contains examples related to general network environment, test & analysis.
+Contiene ejemplos relacionados con el entorno general de red, pruebas y análisis.
 
-See the [README.md](../README.md) file in the upper level [examples](../) directory for more information about examples.
+Consulta el archivo [README.md](../README.md) en el directorio [examples](../) de nivel superior para obtener más información sobre los ejemplos.

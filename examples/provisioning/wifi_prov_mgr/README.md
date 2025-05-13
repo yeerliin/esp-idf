@@ -1,74 +1,74 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-S2 | ESP32-S3 |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- |
+| Objetivos Soportados | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-S2 | ESP32-S3 |
+| -------------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- |
 
-# Wi-Fi Provisioning Manager Example
+# Ejemplo del Gestor de Aprovisionamiento Wi-Fi
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+(Consulta el archivo README.md en el directorio 'examples' de nivel superior para obtener más información sobre los ejemplos).
 
-`wifi_prov_mgr` example demonstrates the usage of `wifi_provisioning` manager component for building a provisioning application.
+El ejemplo `wifi_prov_mgr` demuestra el uso del componente gestor `wifi_provisioning` para construir una aplicación de aprovisionamiento.
 
-For this example, BLE is chosen as the default mode of transport, over which the provisioning related communication is to take place. NimBLE has been configured as the default host, but you can also switch to Bluedroid using menuconfig -> Components -> Bluetooth -> Bluetooth Host.
+Para este ejemplo, BLE se ha elegido como el modo de transporte predeterminado, sobre el cual se realizará la comunicación relacionada con el aprovisionamiento. NimBLE se ha configurado como el host predeterminado, pero también puedes cambiar a Bluedroid usando menuconfig -> Components -> Bluetooth -> Bluetooth Host.
 
-> Note: Since ESP32-S2 does not support BLE, the SoftAP will be the default mode of transport in that case. Even for ESP32, you can change to SoftAP transport from menuconfig.
+> Nota: Dado que ESP32-S2 no admite BLE, SoftAP será el modo de transporte predeterminado en ese caso. Incluso para ESP32, puedes cambiar al transporte SoftAP desde menuconfig.
 
-In the provisioning process the device is configured as a Wi-Fi station with specified credentials. Once configured, the device will retain the Wi-Fi configuration, until a flash erase is performed.
+En el proceso de aprovisionamiento, el dispositivo se configura como una estación Wi-Fi con credenciales específicas. Una vez configurado, el dispositivo conservará la configuración Wi-Fi hasta que se realice un borrado de flash.
 
-Right after provisioning is complete, BLE is turned off and disabled to free the memory used by the BLE stack. Though, that is specific to this example, and the user can choose to keep BLE stack intact in their own application.
+Justo después de completar el aprovisionamiento, BLE se apaga y se desactiva para liberar la memoria utilizada por la pila BLE. Sin embargo, esto es específico de este ejemplo, y el usuario puede optar por mantener intacta la pila BLE en su propia aplicación.
 
-`wifi_prov_mgr` uses the following components :
-* `wifi_provisioning` : provides manager, data structures and protocomm endpoint handlers for Wi-Fi configuration
-* `protocomm` : for protocol based communication and secure session establishment
-* `protobuf` : Google's protocol buffer library for serialization of protocomm data structures
-* `bt` : ESP32 BLE stack for transport of protobuf packets
+`wifi_prov_mgr` utiliza los siguientes componentes:
+* `wifi_provisioning`: proporciona el gestor, estructuras de datos y manejadores de endpoints protocomm para la configuración Wi-Fi
+* `protocomm`: para comunicación basada en protocolos y establecimiento de sesión segura
+* `protobuf`: biblioteca de buffer de protocolo de Google para serialización de estructuras de datos de protocomm
+* `bt`: pila BLE de ESP32 para el transporte de paquetes protobuf
 
-This example can be used, as it is, for adding a provisioning service to any application intended for IoT.
+Este ejemplo puede utilizarse, tal como está, para añadir un servicio de aprovisionamiento a cualquier aplicación destinada a IoT.
 
-> Note: If you use this example code in your own project, in BLE mode, then remember to enable the BT stack and BTDM BLE control settings in your SDK configuration (e.g. by using the `sdkconfig.defaults` file from this project).
+> Nota: Si utilizas este código de ejemplo en tu propio proyecto, en modo BLE, recuerda habilitar la pila BT y la configuración de control BTDM BLE en tu configuración SDK (por ejemplo, utilizando el archivo `sdkconfig.defaults` de este proyecto).
 
-## How to use example
+## Cómo usar el ejemplo
 
-### Hardware Required
+### Hardware Requerido
 
-Example should be able to run on any commonly available ESP32/ESP32-S2 development board.
+El ejemplo debería poder ejecutarse en cualquier placa de desarrollo ESP32/ESP32-S2 comúnmente disponible.
 
-### Application Required
+### Aplicación Requerida
 
-Provisioning applications are available for various platforms. See below
+Las aplicaciones de aprovisionamiento están disponibles para varias plataformas. Ver a continuación.
 
-#### Platform : Android
+#### Plataforma: Android
 
-For Android, a provisioning application along with source code is available on GitHub : [esp-idf-provisioning-android](https://github.com/espressif/esp-idf-provisioning-android)
+Para Android, una aplicación de aprovisionamiento junto con el código fuente está disponible en GitHub: [esp-idf-provisioning-android](https://github.com/espressif/esp-idf-provisioning-android)
 
-#### Platform : iOS
+#### Plataforma: iOS
 
-For iOS, a provisioning application along with source code is available on GitHub : [esp-idf-provisioning-ios](https://github.com/espressif/esp-idf-provisioning-ios)
+Para iOS, una aplicación de aprovisionamiento junto con el código fuente está disponible en GitHub: [esp-idf-provisioning-ios](https://github.com/espressif/esp-idf-provisioning-ios)
 
-#### Platform : Linux / Windows / macOS
+#### Plataforma: Linux / Windows / macOS
 
-To install the dependency packages needed, please refer to the top level [README file](../../README.md#running-test-python-script-pytest).
+Para instalar los paquetes de dependencia necesarios, consulta el [archivo README](../../README.md#running-test-python-script-pytest) de nivel superior.
 
-`esp_prov` supports BLE and SoftAP transport for Linux, MacOS and Windows platforms. For BLE, however, if dependencies are not met, the script falls back to console mode and requires another application through which the communication can take place. The `esp_prov` console will guide you through the provisioning process of locating the correct BLE GATT services and characteristics, the values to write, and input read values.
+`esp_prov` soporta transporte BLE y SoftAP para plataformas Linux, MacOS y Windows. Para BLE, sin embargo, si no se cumplen las dependencias, el script recurre al modo consola y requiere otra aplicación a través de la cual pueda tener lugar la comunicación. La consola `esp_prov` te guiará a través del proceso de aprovisionamiento para localizar los servicios y características GATT BLE correctos, los valores a escribir y los valores de lectura de entrada.
 
-### Configure the project
+### Configurar el proyecto
 
 ```
 idf.py menuconfig
 ```
-* Set the BLE/Soft AP transport under "Example Configuration" options. ESP32-S2 will have only SoftAP option (SoftAP option cannot be used if IPv4 is disabled in lwIP)
+* Establece el transporte BLE/Soft AP en las opciones de "Configuración de Ejemplo". ESP32-S2 solo tendrá la opción SoftAP (la opción SoftAP no se puede usar si IPv4 está deshabilitado en lwIP)
 
-### Build and Flash
+### Compilar y Flashear
 
-Build the project and flash it to the board, then run monitor tool to view serial output:
+Compila el proyecto y flashea en la placa, luego ejecuta la herramienta de monitor para ver la salida serial:
 
 ```
 idf.py -p PORT flash monitor
 ```
 
-(To exit the serial monitor, type ``Ctrl-]``.)
+(Para salir del monitor serial, escribe ``Ctrl-]``.)
 
-See the Getting Started Guide for full steps to configure and use ESP-IDF to build projects.
+Consulta la Guía de Inicio Rápido para obtener los pasos completos para configurar y usar ESP-IDF para construir proyectos.
 
-## Example Output
+## Salida del Ejemplo
 
 ```
 I (445) app: Starting provisioning
@@ -76,20 +76,20 @@ I (1035) app: Provisioning started
 I (1045) wifi_prov_mgr: Provisioning started with service name : PROV_261FCC
 ```
 
-Make sure to note down the BLE device name (starting with `PROV_`) displayed in the serial monitor log (eg. PROV_261FCC). This will depend on the MAC ID and will be unique for every device.
+Asegúrate de anotar el nombre del dispositivo BLE (que comienza con `PROV_`) que se muestra en el registro del monitor serial (por ejemplo, PROV_261FCC). Esto dependerá del ID de MAC y será único para cada dispositivo.
 
-In a separate terminal run the `esp_prov.py` script under `$IDP_PATH/tools/esp_prov` directory (make sure to replace `myssid` and `mypassword` with the credentials of the AP to which the device is supposed to connect to after provisioning). Assuming default example configuration, which uses the protocomm security scheme 1 with PoP-based (proof-of-possession) authentication :
+En una terminal separada, ejecuta el script `esp_prov.py` en el directorio `$IDP_PATH/tools/esp_prov` (asegúrate de reemplazar `myssid` y `mypassword` con las credenciales del AP al que se supone que el dispositivo debe conectarse después del aprovisionamiento). Suponiendo la configuración de ejemplo predeterminada, que utiliza el esquema de seguridad protocomm 1 con autenticación basada en PoP (prueba de posesión):
 
 ```
 python esp_prov.py --transport ble --service_name PROV_261FCC --sec_ver 1 --pop abcd1234 --ssid myssid --passphrase mypassword
 ```
 
-For security version 2, the following command can be used:
+Para la versión de seguridad 2, se puede usar el siguiente comando:
 ```
 python esp_prov.py --transport ble --service_name PROV_261FCC --sec_ver 2 --sec2_username wifiprov --sec2_pwd abcd1234 --ssid myssid --passphrase mypassword
 ```
 
-Above command will perform the provisioning steps, and the monitor log should display something like this :
+El comando anterior realizará los pasos de aprovisionamiento, y el registro del monitor debería mostrar algo como esto:
 
 ```
 I (39725) app: Received Wi-Fi credentials
@@ -118,9 +118,9 @@ I (54355) app: Hello World!
 I (55355) app: Hello World!
 ```
 
-**Note:** For generating the credentials for security version 2 (`SRP6a` salt and verifier) for the device-side, the following example command can be used. The output can then directly be used in this example.
+**Nota:** Para generar las credenciales para la versión de seguridad 2 (sal y verificador `SRP6a`) para el lado del dispositivo, se puede usar el siguiente comando de ejemplo. La salida se puede usar directamente en este ejemplo.
 
-The config option `CONFIG_EXAMPLE_PROV_SEC2_DEV_MODE` should be enabled for the example and in `main/app_main.c`, the macro `EXAMPLE_PROV_SEC2_USERNAME` should be set to the same username used in the salt-verifier generation.
+La opción de configuración `CONFIG_EXAMPLE_PROV_SEC2_DEV_MODE` debe estar habilitada para el ejemplo y en `main/app_main.c`, la macro `EXAMPLE_PROV_SEC2_USERNAME` debe establecerse en el mismo nombre de usuario utilizado en la generación de sal-verificador.
 
 ```log
 $ python esp_prov.py --transport softap --sec_ver 2 --sec2_gen_cred --sec2_username wifiprov --sec2_pwd abcd1234
@@ -140,11 +140,11 @@ static const char sec2_verifier[] = {
 
 ```
 
-### QR Code Scanning
+### Escaneo de Código QR
 
-Enabling `CONFIG_EXAMPLE_PROV_SHOW_QR` will display a QR code on the serial terminal, which can be scanned from the ESP Provisioning phone apps to start the Wi-Fi provisioning process.
+Habilitar `CONFIG_EXAMPLE_PROV_SHOW_QR` mostrará un código QR en la terminal serial, que se puede escanear desde las aplicaciones de teléfono de Aprovisionamiento ESP para iniciar el proceso de aprovisionamiento Wi-Fi.
 
-The monitor log should display something like this :
+El registro del monitor debería mostrar algo como esto:
 
 ```
 I (1462) app: Provisioning started
@@ -177,17 +177,17 @@ https://espressif.github.io/esp-jumpstart/qrcode.html?data={"ver":"v1","name":"P
 ```
 
 
-### Wi-Fi Scanning
+### Escaneo Wi-Fi
 
-Provisioning manager also supports providing real-time Wi-Fi scan results (performed on the device) during provisioning. This allows the client side applications to choose the AP for which the device Wi-Fi station is to be configured. Various information about the visible APs is available, like signal strength (RSSI) and security type, etc. Also, the manager now provides capabilities information which can be used by client applications to determine the security type and availability of specific features (like `wifi_scan`).
+El gestor de aprovisionamiento también admite proporcionar resultados de escaneo Wi-Fi en tiempo real (realizados en el dispositivo) durante el aprovisionamiento. Esto permite que las aplicaciones del lado del cliente elijan el AP para el cual se configurará la estación Wi-Fi del dispositivo. Se dispone de diversa información sobre los AP visibles, como la intensidad de la señal (RSSI) y el tipo de seguridad, etc. Además, el gestor ahora proporciona información de capacidades que puede ser utilizada por las aplicaciones cliente para determinar el tipo de seguridad y la disponibilidad de características específicas (como `wifi_scan`).
 
-When using the scan based provisioning, we don't need to specify the `--ssid` and `--passphrase` fields explicitly:
+Al usar el aprovisionamiento basado en escaneo, no necesitamos especificar explícitamente los campos `--ssid` y `--passphrase`:
 
 ```
 python esp_prov.py --transport ble --service_name PROV_261FCC --pop abcd1234
 ```
 
-See below the sample output from `esp_prov` tool on running above command:
+Consulta a continuación la salida de muestra de la herramienta `esp_prov` al ejecutar el comando anterior:
 
 ```
 Connecting...
@@ -225,12 +225,12 @@ Enter passphrase for MyHomeWiFiAP :
 ==== Provisioning was successful ====
 ```
 
-### Interactive Provisioning
+### Aprovisionamiento Interactivo
 
-`esp_prov` supports interactive provisioning. You can trigger the script with a simplified command and input the necessary details
-(`Proof-of-possession` for security scheme 1 and `SRP6a username`, `SRP6a password` for security scheme 2) as the provisioning process advances.
+`esp_prov` admite aprovisionamiento interactivo. Puedes activar el script con un comando simplificado e ingresar los detalles necesarios
+(`Prueba de posesión` para el esquema de seguridad 1 y `nombre de usuario SRP6a`, `contraseña SRP6a` para el esquema de seguridad 2) a medida que avanza el proceso de aprovisionamiento.
 
-The command `python esp_prov.py --transport ble --sec_ver 1` gives out the following sample output:
+El comando `python esp_prov.py --transport ble --sec_ver 1` da la siguiente salida de muestra:
 
 ```
 Discovering...
@@ -270,31 +270,30 @@ Enter passphrase for myssid :
 ==== Provisioning was successful ====
 ```
 
-### Sending Custom Data
+### Envío de Datos Personalizados
 
-The provisioning manager allows applications to send some custom data during provisioning, which may be
-required for some other operations like connecting to some cloud service. This is achieved by creating
-and registering additional endpoints using the below APIs
+El gestor de aprovisionamiento permite a las aplicaciones enviar algunos datos personalizados durante el aprovisionamiento, que pueden ser
+necesarios para algunas otras operaciones como conectarse a algún servicio en la nube. Esto se logra creando
+y registrando endpoints adicionales utilizando las siguientes API
 
 ```
 wifi_prov_mgr_endpoint_create();
 wifi_prov_mgr_endpoint_register();
 ```
 
-In this particular example, we have added an endpoint named "custom-data" which can be tested
-by passing the `--custom_data <MyCustomData>` option to the esp\_prov tool. Following output is
-expected on success:
+En este ejemplo en particular, hemos añadido un endpoint llamado "custom-data" que se puede probar
+pasando la opción `--custom_data <MyCustomData>` a la herramienta esp\_prov. Se espera la siguiente salida en caso de éxito:
 
 ```
 ==== Sending Custom data to esp32 ====
 CustomData response: SUCCESS
 ```
 
-## Troubleshooting
+## Solución de Problemas
 
-### Provisioning failed
+### Aprovisionamiento fallido
 
-It is possible that the Wi-Fi credentials provided were incorrect, or the device was not able to establish connection to the network, in which the the `esp_prov` script will notify failure (with reason). Serial monitor log will display the failure along with disconnect reason :
+Es posible que las credenciales Wi-Fi proporcionadas sean incorrectas, o que el dispositivo no haya podido establecer conexión con la red, en cuyo caso el script `esp_prov` notificará el fallo (con motivo). El registro del monitor serial mostrará el fallo junto con el motivo de desconexión:
 
 ```
 E (367015) app: Provisioning failed!
@@ -302,17 +301,17 @@ E (367015) app: Provisioning failed!
     Please reset to factory and retry provisioning
 ```
 
-Once credentials have been applied, even though wrong credentials were provided, the device will no longer go into provisioning mode on subsequent reboots until NVS is erased (see following section).
+Una vez que se hayan aplicado las credenciales, aunque se hayan proporcionado credenciales incorrectas, el dispositivo ya no entrará en modo de aprovisionamiento en reinicios posteriores hasta que se borre el NVS (consulta la siguiente sección).
 
-### Provisioning does not start
+### El aprovisionamiento no se inicia
 
-If the serial monitor log shows the following :
+Si el registro del monitor serial muestra lo siguiente:
 
 ```
 I (465) app: Already provisioned, starting Wi-Fi STA
 ```
 
-it means either the device has been provisioned earlier with or without success (e.g. scenario covered in above section), or that the Wi-Fi credentials were already set by some other application flashed previously onto your device. On setting the log level to DEBUG this is clearly evident :
+significa que el dispositivo ya ha sido aprovisionado anteriormente con o sin éxito (por ejemplo, el escenario cubierto en la sección anterior), o que las credenciales Wi-Fi ya fueron configuradas por alguna otra aplicación que se flasheó previamente en tu dispositivo. Al establecer el nivel de registro en DEBUG, esto es claramente evidente:
 
 ```
 D (455) wifi_prov_mgr: Found Wi-Fi SSID     : myssid
@@ -320,7 +319,7 @@ D (465) wifi_prov_mgr: Found Wi-Fi Password : m********d
 I (465) app: Already provisioned, starting Wi-Fi STA
 ```
 
-To fix this we simple need to erase the NVS partition from flash. First we need to find out its address and size. This can be seen from the monitor log on the top right after reboot.
+Para solucionar esto, simplemente necesitamos borrar la partición NVS del flash. Primero necesitamos encontrar su dirección y tamaño. Esto se puede ver en el registro del monitor en la parte superior derecha después del reinicio.
 
 ```
 I (47) boot: Partition Table:
@@ -331,26 +330,26 @@ I (73) boot:  2 factory          factory app      00 00 00010000 00124f80
 I (80) boot: End of partition table
 ```
 
-Now erase NVS partition by running the following commands :
+Ahora borra la partición NVS ejecutando los siguientes comandos:
 
 ```
 $IDF_PATH/components/esptool_py/esptool/esptool.py erase_region 0x9000 0x6000
 ```
 
-### Bluetooth Pairing Request during provisioning
+### Solicitud de Emparejamiento Bluetooth durante el aprovisionamiento
 
-ESP-IDF now has functionality to enforce link encryption requirement while performing GATT write on characteristics of provisioning service. This will however result in a pairing pop-up dialog, if link is not encrypted. This feature is disabled by default. In order to enable this feature, please set `CONFIG_WIFI_PROV_BLE_FORCE_ENCRYPTION=y` in the sdkconfig or select the configuration using "idf.py menuconfig" .
+ESP-IDF ahora tiene la funcionalidad de imponer el requisito de cifrado de enlace al realizar una escritura GATT en las características del servicio de aprovisionamiento. Sin embargo, esto resultará en un cuadro de diálogo de emparejamiento, si el enlace no está cifrado. Esta función está deshabilitada de forma predeterminada. Para habilitar esta función, establece `CONFIG_WIFI_PROV_BLE_FORCE_ENCRYPTION=y` en el sdkconfig o selecciona la configuración usando "idf.py menuconfig".
 
 ```
 Component Config --> Wi-Fi Provisioning Manager --> Force Link Encryption during Characteristic Read/Write
 
 ```
-Recompiling the application with above changes should suffice to enable this functionality.
+Recompilar la aplicación con los cambios anteriores debería ser suficiente para habilitar esta funcionalidad.
 
 
-### Unsupported platform
+### Plataforma no soportada
 
-If the platform requirement, for running `esp_prov` is not satisfied, then the script execution will fallback to console mode, in which case the full process (involving user inputs) will look like this :
+Si no se cumple el requisito de plataforma para ejecutar `esp_prov`, la ejecución del script recurrirá al modo consola, en cuyo caso el proceso completo (que implica entradas del usuario) se verá así:
 
 ```
 ==== Esp_Prov Version: v1.0 ====
@@ -405,5 +404,3 @@ BLECLI >> Enter data read from characteristic (in hex) :
 ++++ WiFi state: connected ++++
 ==== Provisioning was successful ====
 ```
-
-The write data is to be copied from the console output ```>>``` to the platform specific application and the data read from the application is to be pasted at the user input prompt ```<<``` of the console, in the format (hex) indicated in above sample log.

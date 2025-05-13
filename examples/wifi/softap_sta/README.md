@@ -1,41 +1,41 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-S2 | ESP32-S3 |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- |
+| Objetivos Soportados | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-S2 | ESP32-S3 |
+| -------------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- |
 
-# Wi-Fi SoftAP & Station Example
+# Ejemplo de Wi-Fi SoftAP y Station
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+(Consulta el archivo README.md en el directorio 'examples' de nivel superior para obtener más información sobre los ejemplos).
 
-This example demonstrates how to use the ESP Wi-Fi driver to act as both an Access Point and a Station simultaneously using the SoftAP and Station features.
-With NAPT enabled on the softAP interface and the station interface set as the default interface this example can be used as Wifi nat router.
+Este ejemplo demuestra cómo utilizar el controlador Wi-Fi de ESP para actuar simultáneamente como un Punto de Acceso y como una Estación utilizando las características de SoftAP y Station.
+Con NAPT habilitado en la interfaz softAP y la interfaz station configurada como interfaz predeterminada, este ejemplo puede usarse como router nat Wi-Fi.
 
-## How to use example
-### Configure the project
+## Cómo usar el ejemplo
+### Configurar el proyecto
 
-Open the project configuration menu (`idf.py menuconfig`).
+Abre el menú de configuración del proyecto (`idf.py menuconfig`).
 
-In the `Example Configuration` menu:
+En el menú `Example Configuration`:
 
-* Set the Wi-Fi SoftAP configuration.
-    * Set `WiFi AP SSID`.
-    * Set `WiFi AP Password`.
+* Configura el Wi-Fi SoftAP.
+    * Establece `WiFi AP SSID`.
+    * Establece `WiFi AP Password`.
 
-* Set the Wi-Fi STA configuration.
-    * Set `WiFi Remote AP SSID`.
-    * Set `WiFi Remote AP Password`.
+* Configura el Wi-Fi STA.
+    * Establece `WiFi Remote AP SSID`.
+    * Establece `WiFi Remote AP Password`.
 
-Optional: If necessary, modify the other choices to suit your needs.
+Opcional: Si es necesario, modifica las otras opciones para adaptarlas a tus necesidades.
 
-### Build and Flash
+### Compilar y Flashear
 
-Build the project and flash it to the board, then run the monitor tool to view the serial output:
+Compila el proyecto y flashéalo en la placa, luego ejecuta la herramienta de monitor para ver la salida serial:
 
-Run `idf.py -p PORT flash monitor` to build, flash and monitor the project.
+Ejecuta `idf.py -p PORT flash monitor` para compilar, flashear y monitorizar el proyecto.
 
-(To exit the serial monitor, type ``Ctrl-]``.)
+(Para salir del monitor serial, escribe ``Ctrl-]``).
 
-## Example Output
+## Salida del Ejemplo
 
-There is the console output for this example:
+Aquí está la salida de consola para este ejemplo:
 
 ```
 I (680) WiFi SoftAP: ESP_WIFI_MODE_AP
@@ -65,6 +65,6 @@ I (3920) esp_netif_handlers: sta ip: 192.168.5.2, mask: 255.255.255.0, gw: 192.1
 I (3920) WiFi Sta: connected to ap SSID:myssid_c3 password:mypassword_c3
 ```
 
-## Troubleshooting
+## Solución de Problemas
 
-For any technical queries, please open an [issue](https://github.com/espressif/esp-idf/issues) on GitHub. We will get back to you soon.
+Para cualquier consulta técnica, por favor abre un [issue](https://github.com/espressif/esp-idf/issues) en GitHub. Te responderemos pronto.

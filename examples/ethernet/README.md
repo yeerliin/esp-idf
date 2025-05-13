@@ -1,17 +1,17 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-H2 | ESP32-P4 | ESP32-S2 | ESP32-S3 |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- |
+| Objetivos Soportados | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-H2 | ESP32-P4 | ESP32-S2 | ESP32-S3 |
+| -------------------- | ----- | -------- | -------- | -------- | -------- | -------- | -------- | -------- | -------- |
 
-# Ethernet Examples
+# Ejemplos de Ethernet
 
-See the [README.md](../README.md) file in the upper level [examples](../) directory for more information about examples.
+Consulta el archivo [README.md](../README.md) en el directorio [examples](../) de nivel superior para obtener más información sobre los ejemplos.
 
-## Common Pin Assignments
+## Asignaciones de Pines Comunes
 
-### Using ESP32 internal MAC
+### Usando el MAC interno de ESP32
 
-* RMII PHY wiring is fixed and can not be changed through either IOMUX or GPIO Matrix. By default, they're connected as follows:
+* El cableado RMII es fijo y no se puede cambiar a través de IOMUX o la Matriz GPIO. Por defecto, están conectados de la siguiente manera:
 
-| GPIO   | RMII Signal | Notes        |
+| GPIO   | Señal RMII  | Notas        |
 | ------ | ----------- | ------------ |
 | GPIO21 | TX_EN       | EMAC_TX_EN   |
 | GPIO19 | TX0         | EMAC_TXD0    |
@@ -20,26 +20,26 @@ See the [README.md](../README.md) file in the upper level [examples](../) direct
 | GPIO26 | RX1         | EMAC_RXD1    |
 | GPIO27 | CRS_DV      | EMAC_RX_DRV  |
 
-* One of the following GPIO pins can be used as RMII REF_CLK input/output:
+* Uno de los siguientes pines GPIO se puede usar como entrada/salida de RMII REF_CLK:
 
-| GPIO   | Function             | Notes        |
-| ------ | -------------------- | ------------ |
-| GPIO0  | EMAC_TX_CLK/CLK_OUT1 | input/output |
-| GPIO16 | EMAC_CLK_OUT         | output       |
-| GPIO17 | EMAC_CLK_180         | output       |
+| GPIO   | Función             | Notas         |
+| ------ | ------------------- | ------------- |
+| GPIO0  | EMAC_TX_CLK/CLK_OUT1 | entrada/salida |
+| GPIO16 | EMAC_CLK_OUT         | salida        |
+| GPIO17 | EMAC_CLK_180         | salida        |
 
-* SMI (Serial Management Interface) wiring is not fixed. You may need to changed it according to your board schematic. By default they're connected as follows:
+* El cableado SMI (Serial Management Interface) no es fijo. Es posible que debas cambiarlo de acuerdo con el esquema de tu placa. Por defecto, están conectados de la siguiente manera:
 
-| GPIO   | SMI Signal  | Notes         |
-| ------ | ----------- | ------------- |
-| GPIO23 | MDC         | Output to PHY |
-| GPIO18 | MDIO        | Bidirectional |
+| GPIO   | Señal SMI  | Notas           |
+| ------ | ---------- | --------------- |
+| GPIO23 | MDC        | Salida al PHY   |
+| GPIO18 | MDIO       | Bidireccional   |
 
-* PHY chip has a reset pin, if want to do a hardware reset during initialization, then you have to connect it with one GPIO on ESP32. See more information from [here](#configure-the-project). The default GPIO used for resetting PHY chip is GPIO5.
+* El chip PHY tiene un pin de reset, si quieres hacer un reset por hardware durante la inicialización, tendrás que conectarlo con un GPIO en el ESP32. Ver más información [aquí](#configure-the-project). El GPIO predeterminado utilizado para resetear el chip PHY es GPIO5.
 
-### Using SPI ethernet modules
+### Usando módulos ethernet SPI
 
-* SPI Ethernet modules (DM9051, W5500, ...) typically consume one SPI interface plus an interrupt and reset GPIO. They can be connected as follows for ESP32 as an example. However, they can be remapped to any pin using the GPIO Matrix.
+* Los módulos Ethernet SPI (DM9051, W5500, ...) típicamente consumen una interfaz SPI más un GPIO de interrupción y reset. Pueden conectarse de la siguiente manera para ESP32 como ejemplo. Sin embargo, pueden remapearse a cualquier pin usando la Matriz GPIO.
 
 | GPIO   | DM9051      |
 | ------ | ----------- |
@@ -47,43 +47,43 @@ See the [README.md](../README.md) file in the upper level [examples](../) direct
 | GPIO13 | SPI_MOSI    |
 | GPIO12 | SPI_MISO    |
 | GPIO15 | SPI_CS      |
-| GPIO4  | Interrupt   |
+| GPIO4  | Interrupción|
 | NC     | Reset       |
 
 ---
 
-**Warning:**
-Please consult Espressif Technical reference manual along with datasheet for specific ESP Module you use when assigning any other pins, especially when choosing from system configuration menu for the ethernet examples, some pins cannot be used (they may already be utilized for different purpose like SPI Flash/RAM, some pins might be inputs only, etc.).
+**Advertencia:**
+Consulta el manual de referencia técnica de Espressif junto con la hoja de datos del módulo ESP específico que uses al asignar cualquier otro pin, especialmente al elegir desde el menú de configuración del sistema para los ejemplos de ethernet, algunos pines no se pueden usar (pueden estar ya utilizados para un propósito diferente como Flash/RAM SPI, algunos pines podrían ser solo entradas, etc.).
 
 ---
 
-## Common Configurations
+## Configuraciones Comunes
 
-1. In the `Example Ethernet Configuration` menu:
-    * Choose the kind of Ethernet.
-    * If `Internal EMAC` is selected:
-        * Choose PHY device under `Ethernet PHY Device`, by default, the **ESP32-Ethernet-Kit** has an `IP101` on board.
-        * Set GPIO number used by SMI signal under `SMI MDC GPIO number` and `SMI MDIO GPIO number` respectively.
-    * If `SPI Ethernet` is selected:
-        * Set SPI specific configuration, including SPI host number, GPIO numbers and clock rate.
-        * Multiple Ethernet SPI modules of the same type can be connected to single SPI interface at a time. The modules then share data and CLK signals. The CS, interrupt and reset pins need to be specifically configured for each module separately.
-    * Set GPIO number used by PHY chip reset under `PHY Reset GPIO number`, you may have to change the default value according to your board schematic. **PHY hardware reset can be disabled by set this value to -1**.
-    * Set PHY address under `PHY Address`, you may have to change the default value according to your board schematic.
+1. En el menú `Example Ethernet Configuration`:
+    * Elige el tipo de Ethernet.
+    * Si se selecciona `Internal EMAC`:
+        * Elige el dispositivo PHY en `Ethernet PHY Device`, por defecto, el **ESP32-Ethernet-Kit** tiene un `IP101` a bordo.
+        * Establece el número de GPIO utilizado por la señal SMI en `SMI MDC GPIO number` y `SMI MDIO GPIO number` respectivamente.
+    * Si se selecciona `SPI Ethernet`:
+        * Establece la configuración específica del SPI, incluidos el número de host SPI, los números de GPIO y la velocidad de reloj.
+        * Se pueden conectar múltiples módulos Ethernet SPI del mismo tipo a una única interfaz SPI a la vez. Los módulos comparten las señales de datos y CLK. Los pines CS, interrupción y reset deben configurarse específicamente para cada módulo por separado.
+    * Establece el número de GPIO utilizado por el reset del chip PHY en `PHY Reset GPIO number`, es posible que tengas que cambiar el valor predeterminado según el esquema de tu placa. **El reset por hardware del PHY puede desactivarse estableciendo este valor en -1**.
+    * Establece la dirección PHY en `PHY Address`, es posible que tengas que cambiar el valor predeterminado según el esquema de tu placa.
 
-2. In the `Component config > Ethernet` menu:
-    * Under `Support ESP32 internal EMAC controller` sub-menu:
-        * In the `PHY interface`, select `Reduced Media Independent Interface (RMII)`, ESP-IDF currently only support RMII mode.
-        * In the `RMII clock mode`, select one of the source that RMII clock (50MHz) comes from: `Input RMII clock from external` or `Output RMII clock from internal`.
-        * If `Output RMII clock from internal` is enabled, you also have to set the GPIO number that used to output the RMII clock, under `RMII clock GPIO number`. In this case, you can set the GPIO number to 16 or 17.
-        * If `Output RMII clock from GPIO0 (Experimental!)` is also enabled, then you have no choice but GPIO0 to output the RMII clock.
-        * In `Amount of Ethernet DMA Rx buffers` and `Amount of Ethernet DMA Tx buffers`, you can set the amount of DMA buffers used for Tx and Rx.
-    * Under `Support SPI to Ethernet Module` sub-menu, select the SPI module that you used for this example. Currently ESP-IDF only supports `DM9051`, `W5500` and `KSZ8851SNL`.
+2. En el menú `Component config > Ethernet`:
+    * En el submenú `Support ESP32 internal EMAC controller`:
+        * En `PHY interface`, selecciona `Reduced Media Independent Interface (RMII)`, ESP-IDF actualmente solo soporta el modo RMII.
+        * En `RMII clock mode`, selecciona una de las fuentes de donde proviene el reloj RMII (50MHz): `Input RMII clock from external` o `Output RMII clock from internal`.
+        * Si `Output RMII clock from internal` está habilitado, también debes establecer el número de GPIO que se usa para la salida del reloj RMII, en `RMII clock GPIO number`. En este caso, puedes establecer el número de GPIO en 16 o 17.
+        * Si `Output RMII clock from GPIO0 (Experimental!)` también está habilitado, entonces no tienes otra opción que GPIO0 para la salida del reloj RMII.
+        * En `Amount of Ethernet DMA Rx buffers` y `Amount of Ethernet DMA Tx buffers`, puedes establecer la cantidad de buffers DMA utilizados para Tx y Rx.
+    * En el submenú `Support SPI to Ethernet Module`, selecciona el módulo SPI que usaste para este ejemplo. Actualmente ESP-IDF solo soporta `DM9051`, `W5500` y `KSZ8851SNL`.
 
-## Common Troubleshooting
+## Solución de Problemas Comunes
 
-* The data panel between ESP32's MAC and PHY needs a fixed 50MHz clock to do synchronization, which also called RMII clock. It can either be provided by an external oscillator or generated from internal APLL. The signal integrity of RMII clock is strict, so keep the trace as short as possible!
-* If the RMII clock is generated from internal APLL, then APLL can't be used for other purpose (e.g. I2S).
-* If you observe undefined behavior (e.g. LCD glitches) of any **SPI device** which works normally when Ethernet is not connected over internal EMAC, you need to adjust EMAC DMA burst length (the DMA is shared resource between EMAC and the SPI). The same applies when you observe Ethernet frames corruption at the output of SPI Ethernet module and you use combination of internal EMAC and SPI Ethernet module as network interfaces. To configure the EMAC DMA burst length, modify internal Ethernet initialization as follows:
+* El panel de datos entre el MAC de ESP32 y el PHY necesita un reloj fijo de 50MHz para hacer la sincronización, también llamado reloj RMII. Puede ser proporcionado por un oscilador externo o generado desde el APLL interno. La integridad de la señal del reloj RMII es estricta, ¡así que mantén el trazado lo más corto posible!
+* Si el reloj RMII se genera desde el APLL interno, entonces el APLL no se puede usar para otro propósito (por ejemplo, I2S).
+* Si observas un comportamiento indefinido (por ejemplo, parpadeos en la LCD) de cualquier **dispositivo SPI** que funciona normalmente cuando Ethernet no está conectado a través del EMAC interno, necesitas ajustar la longitud de ráfaga DMA de EMAC (el DMA es un recurso compartido entre EMAC y el SPI). Lo mismo se aplica cuando observas corrupción de tramas Ethernet en la salida del módulo Ethernet SPI y usas una combinación de EMAC interno y módulo Ethernet SPI como interfaces de red. Para configurar la longitud de ráfaga DMA de EMAC, modifica la inicialización de Ethernet interna de la siguiente manera:
 
 ```c
 esp32_emac_config.dma_burst_len = ETH_DMA_BURST_LEN_4; // or other appropriate value

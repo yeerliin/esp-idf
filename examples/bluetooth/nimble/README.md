@@ -1,19 +1,19 @@
-# Bluetooth Examples for NimBLE host
+# Ejemplos de Bluetooth para host NimBLE
 
-Note: To use examples in this directory, you need to have Bluetooth enabled in configuration and NimBLE selected as the host stack.
+Nota: Para usar los ejemplos en este directorio, necesitas tener Bluetooth habilitado en la configuración y NimBLE seleccionado como la pila de host.
 
-# Example Layout
+# Estructura de Ejemplos
 
-This directory includes examples to demonstrate BLE functionality using [Apache MyNewt NimBLE](https://github.com/apache/mynewt-nimble) host stack.
+Este directorio incluye ejemplos para demostrar la funcionalidad BLE usando la pila de host [Apache MyNewt NimBLE](https://github.com/apache/mynewt-nimble).
 
-* `blecent` Shows how ESP32 acts as a BLE central.
-* `blehr` Demonstrates standard Heart Rate measurement BLE peripheral.
-* `blemesh` Demonstrates BLE mesh functionality of NimBLE.
-* `bleprph` Shows how ESP32 acts as a BLE Peripheral.
-* `bleprph_wifi_coex` ESP32 acts as a BLE Peripheral and simultaneously performs Wi-Fi ping to configured IP address.
+* `blecent` Muestra cómo ESP32 actúa como un BLE central.
+* `blehr` Demuestra un periférico BLE estándar de medición de frecuencia cardíaca.
+* `blemesh` Demuestra la funcionalidad de malla BLE de NimBLE.
+* `bleprph` Muestra cómo ESP32 actúa como un periférico BLE.
+* `bleprph_wifi_coex` ESP32 actúa como un periférico BLE y simultáneamente realiza ping Wi-Fi a la dirección IP configurada.
 
-See the [README.md](../../README.md) file in the upper level [examples](../../) directory for more information about examples.
+Consulta el archivo [README.md](../../README.md) en el directorio [examples](../../) de nivel superior para obtener más información sobre los ejemplos.
 
-# More
+# Más
 
-See the [README.md](../../README.md) file in the upper level [examples](../../) directory for more information about examples.
+Consulta el archivo [README.md](../../README.md) en el directorio [examples](../../) de nivel superior para obtener más información sobre los ejemplos.

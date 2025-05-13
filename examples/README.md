@@ -1,115 +1,46 @@
-# Examples
+# Ejemplos
 
-This directory contains a range of example ESP-IDF projects. These examples are intended to demonstrate parts of the ESP-IDF functionality, and to provide code that you can copy and adapt into your own projects.
+Este directorio contiene una serie de proyectos de ejemplo ESP-IDF. Estos ejemplos están destinados a demostrar partes de la funcionalidad de ESP-IDF, y proporcionar código que puedes copiar y adaptar a tus propios proyectos.
 
-## Example Layout
+## Estructura de Ejemplos
 
-The examples are grouped into subdirectories by category. Each category directory contains one or more example projects:
+Los ejemplos están agrupados en subdirectorios por categoría. Cada directorio de categoría contiene uno o más proyectos de ejemplo:
 
-- `bluetooth/bluedroid` Classic BT, BLE and coex examples using default Bluedroid host stack.
-- `bluetooth/nimble` BLE examples using NimBLE host stack.
-- `bluetooth/esp_ble_mesh` ESP BLE Mesh examples.
-- `bluetooth/hci` HCI transport (VHCI and HCI UART) examples.
-- `build_system` Examples of build system features.
-- `cxx` C++ language utilization examples and experimental components.
-- `ethernet` Ethernet network examples.
-- `get-started` Simple examples with minimal functionality. Good start point for beginners.
-- `ieee802154` IEEE802.15.4 examples.
-- `mesh` Wi-Fi Mesh examples.
-- `network` Examples related to general network environment, test & analysis.
-- `openthread` OpenThread examples.
-- `peripherals` Examples showing driver functionality for the various onboard ESP32 peripherals.
-- `protocols` Examples showing network protocol interactions.
-- `provisioning` Wi-Fi provisioning examples.
-- `security` Examples about security features.
-- `storage` Examples showing data storage methods using SPI flash, external storage like the SD/MMC interface and flash partitioning.
-- `system` Demonstrates some internal chip features, or debugging & development tools.
-- `wifi` Advanced Wi-Fi features (For network protocol examples, see `protocols` instead.)
-- `Zigbee` Zigbee network and device examples.
+- `bluetooth/bluedroid` Ejemplos de BT Clásico, BLE y coexistencia utilizando la pila de host predeterminada Bluedroid.
+- `bluetooth/nimble` Ejemplos de BLE utilizando la pila de host NimBLE.
+- `bluetooth/esp_ble_mesh` Ejemplos de ESP BLE Mesh.
+- `bluetooth/hci` Ejemplos de transporte HCI (VHCI y HCI UART).
+- `build_system` Ejemplos de características del sistema de compilación.
+- `cxx` Ejemplos de utilización del lenguaje C++ y componentes experimentales.
+- `ethernet` Ejemplos de red Ethernet.
+- `get-started` Ejemplos simples con funcionalidad mínima. Buen punto de partida para principiantes.
+- `ieee802154` Ejemplos de IEEE802.15.4.
+- `mesh` Ejemplos de Wi-Fi Mesh.
+- `network` Ejemplos relacionados con el entorno general de red, pruebas y análisis.
+- `openthread` Ejemplos de OpenThread.
+- `peripherals` Ejemplos que muestran la funcionalidad del controlador para los diversos periféricos a bordo del ESP32.
+- `protocols` Ejemplos que muestran interacciones de protocolos de red.
+- `provisioning` Ejemplos de aprovisionamiento Wi-Fi.
+- `security` Ejemplos sobre características de seguridad.
+- `storage` Ejemplos que muestran métodos de almacenamiento de datos utilizando flash SPI, almacenamiento externo como la interfaz SD/MMC y particionamiento de flash.
+- `system` Demuestra algunas características internas del chip, o herramientas de depuración y desarrollo.
+- `wifi` Características avanzadas de Wi-Fi (Para ejemplos de protocolos de red, consulta `protocols`).
+- `Zigbee` Ejemplos de red y dispositivo Zigbee.
 
-In addition to these examples, `commmon_components` directory contains code shared by several examples.
+Además de estos ejemplos, el directorio `commmon_components` contiene código compartido por varios ejemplos.
 
-## Using Examples
+## Uso de los Ejemplos
 
-Before building an example, follow the [ESP-IDF Getting Started](https://idf.espressif.com/) to ensure you have the required development environment.
+Antes de compilar un ejemplo, sigue la [Guía de Inicio de ESP-IDF](https://idf.espressif.com/) para asegurarte de tener el entorno de desarrollo requerido.
 
-### Set Chip Target
+### Establecer el Objetivo del Chip
 
-First of all, your target must be supported by both:
+En primer lugar, tu objetivo debe ser compatible con:
 
-- **By your ESP-IDF version**: For the full list of supported targets, run:
+- **Tu versión de ESP-IDF**: Para ver la lista completa de objetivos compatibles, ejecuta:
   ```
   idf.py --list-targets
   ```
-- **By this example**: For the full list of supported targets,  refer to the supported targets table at the top of this README.
+- **Este ejemplo**: Para ver la lista completa de objetivos compatibles, consulta la tabla de objetivos compatibles en la parte superior de este README.
 
-After you make sure that your target is supported, go to your example project directory and [set the chip target](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/tools/idf-py.html#select-the-target-chip-set-target):
-
-```
-idf.py set-target <target>
-```
-
-For example, to set esp32 as the chip target, run:
-
-```
-idf.py set-target esp32
-```
-
-
-### Configure the Project
-
-For information about Kconfig options, see [Project Configuration](https://docs.espressif.com/projects/esp-idf/en/latest/api-reference/kconfig.html).
-
-To conveniently check or modify Kconfig options for this example in a project configuration menu, run:
-
-```
-idf.py menuconfig
-```
-
-
-### Build and Flash
-
-Execute the following command to build the project, flash it to your development board, and run the monitor tool to view the serial output:
-
-```
-idf.py build flash monitor
-```
-
-This command can be reduced to `idf.py flash monitor`.
-
-If the above command fails, check the log on the serial monitor which usually provides information on the possible cause of the issue.
-
-To exit the serial monitor, use `Ctrl` + `]`.
-
-
-## Running Test Python Script (pytest)
-
-Some of the examples have `pytest_....py` scripts that are using the `pytest` as the test framework. For detailed information, please refer to the "Run the Tests Locally" Section under [ESP-IDF tests in Pytest documentation](../docs/en/contribute/esp-idf-tests-with-pytest.rst)
-
-Using `pytest` is the recommended way to write new tests. We will migrate all the example test scripts to this new framework soon.
-
-## Copying Examples
-
-Each example is a standalone project. The examples _do not have to be inside the esp-idf directory_. You can copy an example directory to anywhere on your computer in order to make a copy that you can modify and work with.
-
-The `IDF_PATH` environment variable is the only thing that connects the example to the rest of ESP-IDF.
-
-If you're looking for a more bare-bones project to start from, try [esp-idf-template](https://github.com/espressif/esp-idf-template).
-
-## Further Development
-
-For further steps on how to develop a project, see the following:
-
-- Managing the project:
-  - [IDF Frontend](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html#start-a-new-project) document
-  - ESP-IDF Getting Started video ([YouTube](https://youtu.be/J8zc8mMNKtc?t=340), [bilibili](https://www.bilibili.com/video/BV1114y1r7du/?t=336))
-  - [Overview](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/build-system.html#example-project) of an example project
-  - [Build System](https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/build-system.html) document
-- Writing code:
-  - Write your own code following the [API references](https://docs.espressif.com/projects/esp-idf/en/stable/api-reference/index.html)
-
-## Contributing Examples
-
-If you have a new example you think we'd like, please consider sending it to us as a Pull Request.
-
-In the ESP-IDF documentation, you can find a ["Creating Examples" page](../docs/en/contribute/creating-examples.rst) which lays out the steps to creating a top quality example.
+Después de asegurarte de que tu objetivo es compatible, ve al directorio de tu proyecto de ejemplo y [establece el objetivo del chip](https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/tools/idf-py.html#select-the-target-chip-set-target):

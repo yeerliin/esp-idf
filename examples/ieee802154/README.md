@@ -1,9 +1,9 @@
-# IEEE802.15.4 Examples
+# Ejemplos de IEEE802.15.4
 
-See the [README.md](../README.md) file in the upper level [examples](../) directory for more information about examples.
+Consulta el archivo [README.md](../README.md) en el directorio [examples](../) de nivel superior para obtener más información sobre los ejemplos.
 
-## Overview
+## Visión general
 
-In this folder, it contains following IEEE802.15.4 examples:
+En esta carpeta, contiene los siguientes ejemplos de IEEE802.15.4:
 
-* [ieee802154_cli](ieee802154_cli) is an IEEE802.15.4 Command Line example, the commands it supports are listed in [README.md](./ieee802154_cli//README.md). It runs on an 802.15.4 SoC like ESP32-H2.
+* [ieee802154_cli](ieee802154_cli) es un ejemplo de Línea de Comandos de IEEE802.15.4, los comandos que admite se enumeran en [README.md](./ieee802154_cli//README.md). Se ejecuta en un SoC 802.15.4 como ESP32-H2.

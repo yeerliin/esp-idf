@@ -1,72 +1,72 @@
 | Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-H2 | ESP32-S3 |
 | ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- |
 
-# BLE Central Proximity Sensor Example
+# Ejemplo de Sensor de Proximidad BLE Central
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+(Consulta el archivo README.md en el directorio de 'examples' de nivel superior para obtener más información sobre los ejemplos).
 
-This example creates GATT client and performs passive scan, it then connects to peripheral device if the device advertises connectability and the device advertises support for the Link Loss service (0x1803) as primary service UUID.
+Este ejemplo crea un cliente GATT y realiza un escaneo pasivo, luego se conecta al dispositivo periférico si el dispositivo anuncia conectividad y el dispositivo anuncia soporte para el servicio de Pérdida de Enlace (0x1803) como UUID de servicio primario.
 
-It alerts the application when link gets disconnected.
+Alerta a la aplicación cuando el enlace se desconecta.
 
-After connection it enables bonding and link encryprion if the `Enable Link Encryption` flag is set in the example config.
+Después de la conexión, habilita el emparejamiento y el cifrado de enlace si la bandera `Enable Link Encryption` está establecida en la configuración del ejemplo.
 
-It performs following GATT operations against the specified peer:
+Realiza las siguientes operaciones GATT contra el par especificado:
 
-* Writes the alert level characteristic of link loss service.
+* Escribe en la característica de nivel de alerta del servicio de pérdida de enlace.
 
-* After the write operation is completed, reads the tx power level characteristic.
+* Después de completar la operación de escritura, lee la característica de nivel de potencia de transmisión.
 
-* It continuously calculated the path loss. If the path loss exceeds high threshold, it writes to alert level characteristic of immediate alert service of peripheral to start alerting.
+* Calcula continuamente la pérdida de ruta. Si la pérdida de ruta excede el umbral alto, escribe en la característica de nivel de alerta del servicio de alerta inmediata del periférico para comenzar a alertar.
 
-* If the path loss drops below the low threshold, it writes to alert level characteristic of immediate alert service of peripheral to stop alerting.
+* Si la pérdida de ruta cae por debajo del umbral bajo, escribe en la característica de nivel de alerta del servicio de alerta inmediata del periférico para detener la alerta.
 
-If the peer does not support a required service, characteristic, or descriptor, then the peer lied when it claimed support for the Link Loss service! When this happens, or if a GATT procedure fails, this function immediately terminates the connection.
+Si el par no admite un servicio, característica o descriptor requerido, ¡entonces el par mintió cuando afirmó admitir el servicio de Pérdida de Enlace! Cuando esto sucede, o si un procedimiento GATT falla, esta función termina inmediatamente la conexión.
 
-It uses ESP32's Bluetooth controller and NimBLE stack based BLE host.
+Utiliza el controlador Bluetooth de ESP32 y la pila BLE host basada en NimBLE.
 
-This example aims at understanding BLE service discovery, connection, encryption and characteristic operations.
+Este ejemplo tiene como objetivo comprender el descubrimiento de servicios BLE, la conexión, el cifrado y las operaciones de características.
 
-To test this demo, use any BLE GATT server app that advertises support for the Link Loss service (0x1803) and includes it in the GATT database.
+Para probar esta demostración, utiliza cualquier aplicación de servidor GATT BLE que anuncie soporte para el servicio de Pérdida de Enlace (0x1803) y lo incluya en la base de datos GATT.
 
-## How to Use Example
+## Cómo Usar el Ejemplo
 
-Before project configuration and build, be sure to set the correct chip target using:
+Antes de la configuración y compilación del proyecto, asegúrate de establecer el objetivo de chip correcto utilizando:
 
 ```bash
 idf.py set-target <chip_name>
 ```
 
-### Hardware Required
+### Hardware Requerido
 
-* A development board with ESP32/ESP32-C2/ESP32-C3/ESP32-S3 SoC (e.g., ESP32-DevKitC, ESP-WROVER-KIT, etc.)
-* A USB cable for Power supply and programming
+* Una placa de desarrollo con SoC ESP32/ESP32-C2/ESP32-C3/ESP32-S3 (p. ej., ESP32-DevKitC, ESP-WROVER-KIT, etc.)
+* Un cable USB para alimentación y programación
 
-See [Development Boards](https://www.espressif.com/en/products/devkits) for more information about it.
+Consulta [Placas de Desarrollo](https://www.espressif.com/en/products/devkits) para obtener más información al respecto.
 
-### Configure the Project
+### Configurar el Proyecto
 
-Open the project configuration menu: 
+Abre el menú de configuración del proyecto: 
 
 ```bash
 idf.py menuconfig
 ```
 
-In the `Example Configuration` menu:
+En el menú `Example Configuration`:
 
-* Change the `Peer Address` option if needed.
+* Cambia la opción `Peer Address` si es necesario.
 
-### Build and Flash
+### Compilar y Flashear
 
-Run `idf.py -p PORT flash monitor` to build, flash and monitor the project.
+Ejecuta `idf.py -p PUERTO flash monitor` para compilar, flashear y monitorear el proyecto.
 
-(To exit the serial monitor, type ``Ctrl-]``.)
+(Para salir del monitor serial, escribe ``Ctrl-]``.)
 
-See the [Getting Started Guide](https://idf.espressif.com/) for full steps to configure and use ESP-IDF to build projects.
+Consulta la [Guía de Inicio](https://idf.espressif.com/) para conocer los pasos completos para configurar y utilizar ESP-IDF para compilar proyectos.
 
-## Example Output
+## Salida del Ejemplo
 
-This is the console output on successful connection:
+Esta es la salida de la consola en una conexión exitosa:
 
 ```
 I (358) BLE_INIT: BT controller compile version [a186b41]
@@ -214,6 +214,6 @@ I (15407) NimBLE: Link lost for device with conn_handle 0
 
 ```
 
-## Troubleshooting
+## Solución de Problemas
 
-For any technical queries, please open an [issue](https://github.com/espressif/esp-idf/issues) on GitHub. We will get back to you soon.
+Para cualquier consulta técnica, por favor abre un [issue](https://github.com/espressif/esp-idf/issues) en GitHub. Te responderemos lo antes posible.
