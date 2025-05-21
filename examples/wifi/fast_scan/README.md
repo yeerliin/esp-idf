@@ -1,57 +1,57 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-S2 | ESP32-S3 |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- |
+| Plataformas Soportadas | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-S2 | ESP32-S3 |
+| ---------------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | -------- |
 
-# Wi-Fi Fast Scan Example
+# Ejemplo de Escaneo Rápido Wi-Fi
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+(Consulte el archivo README.md en el directorio de nivel superior 'examples' para obtener más información sobre los ejemplos).
 
-This example shows how to use the scan functionality of the Wi-Fi driver of ESP for connecting to an AP.
+Este ejemplo muestra cómo utilizar la funcionalidad de escaneo del controlador Wi-Fi de ESP para conectarse a un punto de acceso (AP).
 
-Two scan methods are supported: fast scan and all channel scan.
+Se admiten dos métodos de escaneo: escaneo rápido y escaneo de todos los canales.
 
-* `fast scan`: in this mode, scan finishes right after a matching AP is detected, even if channels are not completely scanned. You can set thresholds for signal strength, as well as select desired authentication modes provided by the AP's. The Wi-Fi driver will ignore AP's that fail to meet mentioned criteria.
+* `escaneo rápido`: en este modo, el escaneo finaliza inmediatamente después de detectar un AP coincidente, incluso si no se han escaneado todos los canales. Puede establecer umbrales para la intensidad de la señal, así como seleccionar los modos de autenticación deseados proporcionados por los AP. El controlador Wi-Fi ignorará los AP que no cumplan con los criterios mencionados.
 
-* `all channel scan`: scan will end only after all channels are scanned; the Wi-Fi driver will store 4 of the fully matching AP's. Sort methods for AP's include rssi and authmode. After the scan, the Wi-Fi driver selects the AP that fits best based on the sort.
+* `escaneo de todos los canales`: el escaneo finalizará solo después de escanear todos los canales; el controlador Wi-Fi almacenará 4 de los AP que coincidan completamente. Los métodos de clasificación para los AP incluyen rssi y authmode. Después del escaneo, el controlador Wi-Fi selecciona el AP que mejor se adapta según la clasificación.
 
-After the scan, the Wi-Fi driver will try to connect. Because it needs to to allocate precious dynamic memory to store matching AP's, and, most of the cases, connect to the AP with the strongest reception, it does not need to record all the AP's matched. The number of matches stored is limited to 4 in order to limit dynamic memory usage. Among the 4 matches,  AP's are allowed to carry the same SSID name and all possible authentication modes - Open, WEP, WPA and WPA2.
+Después del escaneo, el controlador Wi-Fi intentará conectarse. Debido a que necesita asignar memoria dinámica valiosa para almacenar los AP coincidentes y, en la mayoría de los casos, conectarse al AP con la recepción más fuerte, no necesita registrar todos los AP coincidentes. El número de coincidencias almacenadas está limitado a 4 para limitar el uso de memoria dinámica. Entre las 4 coincidencias, se permite que los AP lleven el mismo nombre SSID y todos los modos de autenticación posibles: abierto, WEP, WPA y WPA2.
 
-## How to use example
+## Cómo usar el ejemplo
 
-Before project configuration and build, be sure to set the correct chip target using `idf.py set-target <chip_name>`.
+Antes de la configuración y compilación del proyecto, asegúrese de establecer el chip objetivo correcto usando `idf.py set-target <chip_name>`.
 
-### Hardware Required
+### Hardware Requerido
 
-* A development board with ESP32/ESP32-S2/ESP32-C3 SoC (e.g., ESP32-DevKitC, ESP-WROVER-KIT, etc.)
-* A USB cable for Power supply and programming
+* Una placa de desarrollo con SoC ESP32/ESP32-S2/ESP32-C3 (por ejemplo, ESP32-DevKitC, ESP-WROVER-KIT, etc.)
+* Un cable USB para alimentación y programación
 
-### Configure the project
+### Configurar el proyecto
 
-Open the project configuration menu (`idf.py menuconfig`).
+Abra el menú de configuración del proyecto (`idf.py menuconfig`).
 
-In the `Example Configuration` menu:
+En el menú `Example Configuration`:
 
-* Use `WiFi SSID` to set the SSID.
-* Use `WiFi Password` to set the password.
+* Use `WiFi SSID` para establecer el SSID.
+* Use `WiFi Password` para establecer la contraseña.
 
-Optional: If you need, change the other options according to your requirements.
+Opcional: Si es necesario, cambie las otras opciones según sus requisitos.
 
-### Build and Flash
+### Compilar y Cargar
 
-Build the project and flash it to the board, then run monitor tool to view serial output:
+Compile el proyecto y cárguelo en la placa, luego ejecute la herramienta de monitoreo para ver la salida serial:
 
-Run `idf.py -p PORT flash monitor` to build, flash and monitor the project.
+Ejecute `idf.py -p PORT flash monitor` para compilar, cargar y monitorear el proyecto.
 
-(To exit the serial monitor, type ``Ctrl-]``.)
+(Para salir del monitor serial, escriba ``Ctrl-]``).
 
-See the Getting Started Guide for all the steps to configure and use the ESP-IDF to build projects.
+Consulte la Guía de Inicio para todos los pasos para configurar y usar ESP-IDF para construir proyectos.
 
-* [ESP-IDF Getting Started Guide on ESP32](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html)
-* [ESP-IDF Getting Started Guide on ESP32-S2](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/index.html)
-* [ESP-IDF Getting Started Guide on ESP32-C3](https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/get-started/index.html)
+* [Guía de Inicio de ESP-IDF en ESP32](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/index.html)
+* [Guía de Inicio de ESP-IDF en ESP32-S2](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/index.html)
+* [Guía de Inicio de ESP-IDF en ESP32-C3](https://docs.espressif.com/projects/esp-idf/en/latest/esp32c3/get-started/index.html)
 
-## Example Output
+## Salida del Ejemplo
 
-As you run the example, you will see the following log:
+Al ejecutar el ejemplo, verá el siguiente registro:
 
 ```
 I (616) wifi:wifi firmware version: 6bff005
@@ -92,6 +92,6 @@ I (2086) esp_netif_handlers: sta ip: 192.168.68.110, mask: 255.255.255.0, gw: 19
 
 ```
 
-## Troubleshooting
+## Solución de problemas
 
-For any technical queries, please open an [issue](https://github.com/espressif/esp-idf/issues) on GitHub. We will get back to you soon.
+Para cualquier consulta técnica, por favor abra un [issue](https://github.com/espressif/esp-idf/issues) en GitHub. Nos pondremos en contacto con usted pronto.
